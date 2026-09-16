@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "ahr2",
+  "version": "${version}",
+  "name": "A Hundov Ranch 2.0",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "main.client.mainDataGenerator"
+    ],
+    "client": [
+      "main.client.mainClient"
+    ],
+    "main": [
+      "main"
+    ]
+  },
+  "mixins": [
+    "ahr2.mixins.json",
+    {
+      "config": "ahr2.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

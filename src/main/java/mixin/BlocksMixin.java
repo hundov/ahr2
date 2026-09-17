@@ -1,5 +1,6 @@
 package mixin;
 
+import block.AHRCropBlock;
 import block.AHRWheatBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -26,7 +27,7 @@ public class BlocksMixin {
         String id = args.get(0);
 
         if ("wheat".equals(id)) {
-            args.set(1, (Function<BlockBehaviour.Properties, Block>) AHRWheatBlock::new);
+            args.set(1, (Function<BlockBehaviour.Properties, Block>) AHRCropBlock::new);
         }
     }
 }

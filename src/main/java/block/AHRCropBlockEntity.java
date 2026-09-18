@@ -6,12 +6,22 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import registry.AHRBlockEntities;
+import util.Logger;
 
 public class AHRCropBlockEntity extends BlockEntity {
 
     private int subStage = 0;
     private boolean boneMealUsed = false;
-    private int deathChance = 0;
+    protected int deathChance = 0;
+
+    // Добавляемый шанс смерти за каждый тик при полном росте
+    protected int fullyGrownDeathChance = 5;
+
+    // Максимальное количество подстадий
+    protected static final int maxSubStage = 3;
+
+    private final Logger log = new Logger();
 
     public AHRCropBlockEntity(BlockPos pos, BlockState state) {
         super(AHRBlockEntities.CROP, pos, state);
@@ -19,45 +29,73 @@ public class AHRCropBlockEntity extends BlockEntity {
 
     public void tickGrowth(ServerLevel level, RandomSource random) {
 
-        BlockState state = getBlockState();
-        BlockPos pos = getBlockPos();
+        log.send("called");
 
-        if (state.getValue(AHRCropBlock.AGE) >= 7) {
-            deathChance += 5;
-
-            if (random.nextInt(100) < deathChance) {
-                level.setBlock(pos, Blocks.DEAD_BUSH.defaultBlockState(), 2);
-            }
-
-            setChanged();
-            return;
-        }
-
-        if (level.getRawBrightness(pos, 0) < 9) deathChance++;
-
-        if (random.nextInt(100) < deathChance) {
-            level.setBlock(pos, Blocks.DEAD_BUSH.defaultBlockState(), 2);
-            return;
-        }
-
+        fullyGrownTick(level, random);
+        conditionTest(level, random);
+        if (tryDeath(level, random)) return;
         advanceSubStage(level);
+
+        log.send("end");
     }
 
-    public void applyBoneMeal(ServerLevel level) {
+    protected void fullyGrownTick(ServerLevel level, RandomSource random) {
+
+        log.send("called");
+
+        BlockState state = getBlockState();
+        if (state.getValue(AHRCropBlock.AGE) >= AHRCropBlock.MAX_AGE) {
+            deathChance += fullyGrownDeathChance;
+        }
+
+        log.send("end");
+    }
+
+    protected void conditionTest(ServerLevel level, RandomSource random) {
+        log.send("called");
+        if (level.getRawBrightness(getBlockPos(), 0) < 9) deathChance++;
+        log.send("end");
+    }
+
+    protected boolean tryDeath(ServerLevel level, RandomSource random) {
+        log.send("called");
+        if (random.nextInt(100) < deathChance) {
+            death(level);
+            log.send("end. died");
+            return true;
+        }
+        log.send("end");
+        return false;
+    }
+
+    protected void death(ServerLevel level) {
+        log.send("called");
+        BlockPos pos = getBlockPos();
+        level.setBlock(pos, Blocks.DEAD_BUSH.defaultBlockState(), 2);
+        setChanged();
+        log.send("end");
+    }
+
+    protected void applyBoneMeal(ServerLevel level) {
+        log.send("called");
 
         if (boneMealUsed) {
+            log.send("end. boneMealUsed");
             return;
         }
 
         deathChance += 3;
         boneMealUsed = true;
         advanceSubStage(level);
+        log.send("end");
     }
 
-    private void advanceSubStage(ServerLevel level) {
+    protected void advanceSubStage(ServerLevel level) {
+        log.send("called");
+
         subStage++;
 
-        if (subStage >= 3) {
+        if (subStage >= maxSubStage) {
             subStage = 0;
             boneMealUsed = false;
 
@@ -72,18 +110,12 @@ public class AHRCropBlockEntity extends BlockEntity {
         }
 
         setChanged();
+        log.send("end");
     }
 
-    public boolean isBoneMealUsed() {
-        return boneMealUsed;
-    }
-
-    public int getSubStage() {
-        return subStage;
-    }
-
-    public int getDeathChance() {
-        return deathChance;
-    }
+    // -- getters
+    public boolean isBoneMealUsed() {return boneMealUsed;}
+    public int getSubStage() {return subStage;}
+    public int getDeathChance() {return deathChance;}
 
 }

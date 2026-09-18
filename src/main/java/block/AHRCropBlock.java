@@ -24,26 +24,19 @@ public class AHRCropBlock extends CropBlock implements EntityBlock {
 
     // Main random tick - cycle
     @Override
-    protected void randomTick(
-            BlockState state,
-            ServerLevel level,
-            BlockPos pos,
-            RandomSource random
-    ) {
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (level.getBlockEntity(pos) instanceof AHRCropBlockEntity crop) {
             crop.tickGrowth(level, random);
         }
     }
 
-    // random tick always active (for try to dead crop after full grow)
+    // включаем постоянный тик для смерти после роста
     @Override
     protected boolean isRandomlyTicking(final BlockState state) {
         return true;
     }
 
-    // ------------------------
-    // BONE MEAL
-    // ------------------------
+    // костная мука
 
     @Override
     public void performBonemeal(final ServerLevel level, final RandomSource random, final BlockPos pos, final BlockState state) {

@@ -1,5 +1,5 @@
-import block.AHRBlockEntities;
 import net.fabricmc.api.ModInitializer;
+import registry.AHRBlockEntities;
 
 public class main implements ModInitializer {
 

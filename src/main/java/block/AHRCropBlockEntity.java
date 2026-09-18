@@ -31,7 +31,7 @@ public class AHRCropBlockEntity extends BlockEntity {
 
         log.send("called");
 
-        fullyGrownTick(level, random);
+        if (fullyGrownTick(level, random)) return;
         conditionTest(level, random);
         if (tryDeath(level, random)) return;
         advanceSubStage(level);
@@ -39,16 +39,21 @@ public class AHRCropBlockEntity extends BlockEntity {
         log.send("end");
     }
 
-    protected void fullyGrownTick(ServerLevel level, RandomSource random) {
+    protected boolean fullyGrownTick(ServerLevel level, RandomSource random) {
 
         log.send("called");
 
         BlockState state = getBlockState();
         if (state.getValue(AHRCropBlock.AGE) >= AHRCropBlock.MAX_AGE) {
             deathChance += fullyGrownDeathChance;
+            conditionTest(level, random);
+            tryDeath(level, random);
+            log.send("end. fullyGrownTick");
+            return true;
         }
 
         log.send("end");
+        return false;
     }
 
     protected void conditionTest(ServerLevel level, RandomSource random) {

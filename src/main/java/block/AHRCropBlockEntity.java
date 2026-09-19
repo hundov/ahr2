@@ -12,7 +12,11 @@ import util.Logger;
 public class AHRCropBlockEntity extends BlockEntity {
 
     private int subStage = 0;
+
+
     private boolean boneMealUsed = false;
+    private boolean boneMealEffect = false;
+
     protected int deathChance = 0;
 
     // Добавляемый шанс смерти за каждый тик при полном росте
@@ -34,7 +38,7 @@ public class AHRCropBlockEntity extends BlockEntity {
         if (fullyGrownTick(level, random)) return;
         conditionTest(level, random);
         if (tryDeath(level, random)) return;
-        advanceSubStage(level);
+        if (random.nextInt(3) < (boneMealEffect ? 2 : 1)) advanceSubStage(level);
 
         log.send("end");
     }
@@ -89,8 +93,9 @@ public class AHRCropBlockEntity extends BlockEntity {
             return;
         }
 
-        deathChance += 3;
+        deathChance += 6;
         boneMealUsed = true;
+        boneMealEffect = true;
         advanceSubStage(level);
         log.send("end");
     }

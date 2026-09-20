@@ -2,6 +2,10 @@ package player;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
@@ -14,6 +18,14 @@ public record AHRFoodHistory(List<Item> foods) {
             BuiltInRegistries.ITEM.byNameCodec()
                     .listOf()
                     .xmap(AHRFoodHistory::new, AHRFoodHistory::foods);
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AHRFoodHistory> STREAM_CODEC =
+            ByteBufCodecs.registry(Registries.ITEM)
+                    .apply(ByteBufCodecs.list())
+                    .map(
+                            AHRFoodHistory::new,
+                            AHRFoodHistory::foods
+                    );
 
     public AHRFoodHistory {
         foods = List.copyOf(foods);

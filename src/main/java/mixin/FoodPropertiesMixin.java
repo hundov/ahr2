@@ -1,5 +1,6 @@
 package mixin;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -7,6 +8,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
+import network.AHRNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,6 +24,9 @@ public class FoodPropertiesMixin {
 
     @Unique
     private static final Logger LOG = new Logger();
+    static {
+        LOG.enabled = false;
+    }
 
     @Redirect(
             method = "onConsume",
@@ -38,7 +43,7 @@ public class FoodPropertiesMixin {
             ItemStack stack,
             Consumable consumable
     ) {
-        if (!(user instanceof Player player) || level.isClientSide()) {
+        if (!(user instanceof Player player)) {
             foodData.eat(foodProperties);
             return;
         }
@@ -57,20 +62,20 @@ public class FoodPropertiesMixin {
                 foodProperties.nutrition() * efficiency / 100.0
         );
 
-        int foodBefore = foodData.getFoodLevel();
+        if (nutrition > 0) {
+            foodData.eat(
+                    nutrition,
+                    foodProperties.saturation()
+            );
+        }
 
-        foodData.eat(
-                nutrition,
-                foodProperties.saturation()
-        );
-
-        int foodAfter = foodData.getFoodLevel();
-
-        LOG.send("Food: " + stack.getItem());
-        LOG.send("Previous count: " + previousCount);
-        LOG.send("Efficiency: " + efficiency + "%");
-        LOG.send("Nutrition: " + foodProperties.nutrition() + " -> " + nutrition);
-        LOG.send("Food level: " + foodBefore + " -> " + foodAfter);
+        {
+            LOG.send("SIDE: " + (level.isClientSide() ? "CLIENT" : "SERVER"));
+            LOG.send("Food: " + stack.getItem());
+            LOG.send("Previous count: " + previousCount);
+            LOG.send("Efficiency: " + efficiency + "%");
+            LOG.send("Nutrition: " + foodProperties.nutrition() + " -> " + nutrition);
+        }
     }
 
     @Inject(
@@ -84,16 +89,24 @@ public class FoodPropertiesMixin {
             Consumable consumable,
             CallbackInfo ci
     ) {
-        if (!(user instanceof Player player) || level.isClientSide()) {
+        if (!(user instanceof ServerPlayer player)) {
             return;
         }
 
         AHRFoodHistory history =
                 player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
 
+        AHRFoodHistory updated =
+                history.add(stack.getItem(), 36);
+
         player.setAttached(
                 AHRAttachments.FOOD_HISTORY,
-                history.add(stack.getItem(), 36)
+                updated
+        );
+
+        AHRNetworking.syncFoodHistory(
+                player,
+                updated
         );
     }
 }

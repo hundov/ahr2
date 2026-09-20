@@ -6,7 +6,9 @@
   "mixins": [
     "MobAccessor",
     "ZombieMixin",
-    "BlocksMixin"
+    "BlocksMixin",
+    "FoodPropertiesMixin",
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

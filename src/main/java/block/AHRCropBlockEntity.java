@@ -25,7 +25,10 @@ public class AHRCropBlockEntity extends BlockEntity {
     // Максимальное количество подстадий
     protected static final int maxSubStage = 3;
 
-    private final Logger log = new Logger();
+    private static final Logger log = new Logger();
+    static {
+        log.enabled = false;
+    }
 
     public AHRCropBlockEntity(BlockPos pos, BlockState state) {
         super(AHRBlockEntities.CROP, pos, state);

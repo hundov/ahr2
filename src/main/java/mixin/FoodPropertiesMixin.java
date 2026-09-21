@@ -1,6 +1,11 @@
 package mixin;
 
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -53,10 +58,15 @@ public class FoodPropertiesMixin {
 
         int previousCount = history.count(stack.getItem());
 
-        int efficiency = Math.max(
-                0,
-                100 - previousCount * 10
-        );
+        int efficiency = history.getEfficiency(stack.getItem());
+
+        {
+            if (efficiency == 50) {
+                player.sendOverlayMessage(
+                        Component.translatable("ahr2.food.efficiency_half")
+                );
+            }
+        }
 
         int nutrition = (int) Math.floor(
                 foodProperties.nutrition() * efficiency / 100.0
@@ -67,6 +77,11 @@ public class FoodPropertiesMixin {
                     nutrition,
                     foodProperties.saturation()
             );
+        } else if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.sendOverlayMessage(
+                    Component.translatable("ahr2.food.saturation_zero")
+            );
+            applyNegativeEffect(serverPlayer, level);
         }
 
         {
@@ -76,6 +91,33 @@ public class FoodPropertiesMixin {
             LOG.send("Efficiency: " + efficiency + "%");
             LOG.send("Nutrition: " + foodProperties.nutrition() + " -> " + nutrition);
         }
+    }
+
+    @Unique
+    private static void applyNegativeEffect(ServerPlayer player, Level level) {
+        Holder<MobEffect> effect = switch (level.getRandom().nextInt(4)) {
+            case 0 -> MobEffects.SLOWNESS;
+            case 1 -> MobEffects.NAUSEA;
+            case 2 -> MobEffects.HUNGER;
+            default -> MobEffects.POISON;
+        };
+
+        int durationSeconds = level.getRandom().nextIntBetweenInclusive(15, 60);
+        int amplifierRoll = level.getRandom().nextInt(100);
+        int amplifier;
+
+        if (amplifierRoll < 80) amplifier = 0;
+        else if (amplifierRoll < 95) amplifier = 1;
+        else amplifier = 2;
+
+        player.addEffect(
+                new MobEffectInstance(
+                        effect,
+                        durationSeconds * 20,
+                        amplifier
+                )
+        );
+
     }
 
     @Inject(

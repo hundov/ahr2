@@ -4,11 +4,12 @@
   "package": "mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "MobAccessor",
-    "ZombieMixin",
     "BlocksMixin",
+    "ConsumableMixin",
     "FoodPropertiesMixin",
-    "ServerPlayerMixin"
+    "MobAccessor",
+    "ServerPlayerMixin",
+    "ZombieMixin"
   ],
   "injectors": {
     "defaultRequire": 1

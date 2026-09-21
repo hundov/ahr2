@@ -1,3 +1,5 @@
 {
-  "ahr2.sleep.negative_effect": "You cannot sleep while affected by a negative effect."
+  "ahr2.sleep.negative_effect": "You cannot sleep while affected by a negative effect.",
+  "ahr2.food.efficiency_half": "You feel that this food is less filling.",
+  "ahr2.food.saturation_zero": "You feel that this food no longer satisfies you."
 }

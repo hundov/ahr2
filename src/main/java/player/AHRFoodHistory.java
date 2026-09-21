@@ -68,6 +68,11 @@ public record AHRFoodHistory(List<Item> foods) {
         return new AHRFoodHistory(foods.subList(foods.size() - maxSize, foods.size()));
     }
 
+    public int getEfficiency(Item item) {
+        int previousCount = count(item);
+        return Math.max(0, 100 - previousCount * 10);
+    }
+
     public static AHRFoodHistory get(Player player) {
         return player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
     }

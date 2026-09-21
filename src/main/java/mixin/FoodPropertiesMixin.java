@@ -1,8 +1,10 @@
 package mixin;
 
+import food.AHRFoodTags;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -77,10 +79,14 @@ public class FoodPropertiesMixin {
                     nutrition,
                     foodProperties.saturation()
             );
+
+            if (player instanceof ServerPlayer && stack.is(AHRFoodTags.RAW_FOOD)) applyRawFoodEffects(player, level);
+
         } else if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.sendOverlayMessage(
                     Component.translatable("ahr2.food.saturation_zero")
             );
+
             applyNegativeEffect(serverPlayer, level);
         }
 
@@ -95,27 +101,70 @@ public class FoodPropertiesMixin {
 
     @Unique
     private static void applyNegativeEffect(ServerPlayer player, Level level) {
-        Holder<MobEffect> effect = switch (level.getRandom().nextInt(4)) {
+        RandomSource random = level.getRandom();
+
+        Holder<MobEffect> effect = switch (random.nextInt(4)) {
             case 0 -> MobEffects.SLOWNESS;
             case 1 -> MobEffects.NAUSEA;
             case 2 -> MobEffects.HUNGER;
             default -> MobEffects.POISON;
         };
 
-        int durationSeconds = level.getRandom().nextIntBetweenInclusive(15, 60);
-        int amplifierRoll = level.getRandom().nextInt(100);
+        player.addEffect(
+                createRandomFoodEffect(effect, random)
+        );
+
+    }
+
+    @Unique
+    private static void applyRawFoodEffects(Player player, Level level) {
+        RandomSource random = level.getRandom();
+
+        if (random.nextFloat() < 0.70F) {
+            player.addEffect(
+                    createRandomFoodEffect(
+                            MobEffects.NAUSEA,
+                            random
+                    )
+            );
+        }
+
+        if (random.nextFloat() < 0.70F) {
+            player.addEffect(
+                    createRandomFoodEffect(
+                            MobEffects.HUNGER,
+                            random
+                    )
+            );
+        }
+
+        if (random.nextFloat() < 0.50F) {
+            player.addEffect(
+                    createRandomFoodEffect(
+                            MobEffects.POISON,
+                            random
+                    )
+            );
+        }
+    }
+
+    @Unique
+    private static MobEffectInstance createRandomFoodEffect(Holder<MobEffect> effect, RandomSource random) {
+
+        int durationSeconds = random.nextIntBetweenInclusive(15, 60);
+        int amplifierRoll = random.nextInt(100);
         int amplifier;
 
-        if (amplifierRoll < 80) amplifier = 0;
-        else if (amplifierRoll < 95) amplifier = 1;
-        else amplifier = 2;
+        {
+            if (amplifierRoll < 80) amplifier = 0;
+            else if (amplifierRoll < 95) amplifier = 1;
+            else amplifier = 2;
+        }
 
-        player.addEffect(
-                new MobEffectInstance(
-                        effect,
-                        durationSeconds * 20,
-                        amplifier
-                )
+        return new MobEffectInstance(
+                effect,
+                durationSeconds * 20,
+                amplifier
         );
 
     }

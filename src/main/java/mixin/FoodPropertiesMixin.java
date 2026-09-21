@@ -35,6 +35,9 @@ public class FoodPropertiesMixin {
         LOG.enabled = false;
     }
 
+    @Unique
+    private static final float AHR_SATURATION_MULTIPLAYER = 0.25F;
+
     @Redirect(
             method = "onConsume",
             at = @At(
@@ -74,10 +77,14 @@ public class FoodPropertiesMixin {
                 foodProperties.nutrition() * efficiency / 100.0
         );
 
+        float saturation = foodProperties.saturation()
+                * AHR_SATURATION_MULTIPLAYER
+                * efficiency / 100.0F;
+
         if (nutrition > 0) {
             foodData.eat(
                     nutrition,
-                    foodProperties.saturation()
+                    saturation
             );
 
             if (player instanceof ServerPlayer && stack.is(AHRFoodTags.RAW_FOOD)) applyRawFoodEffects(player, level);

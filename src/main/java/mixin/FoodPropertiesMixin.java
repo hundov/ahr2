@@ -97,7 +97,7 @@ public class FoodPropertiesMixin {
                 player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
 
         AHRFoodHistory updated =
-                history.add(stack.getItem(), 36);
+                history.add(stack.getItem(), level);
 
         player.setAttached(
                 AHRAttachments.FOOD_HISTORY,

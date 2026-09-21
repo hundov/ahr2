@@ -8,11 +8,16 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record AHRFoodHistory(List<Item> foods) {
+
+    public static final int EASY_SIZE = 24;
+    public static final int NORMAL_SIZE = 36;
+    public static final int HARD_SIZE = 48;
 
     public static final Codec<AHRFoodHistory> CODEC =
             BuiltInRegistries.ITEM.byNameCodec()
@@ -35,16 +40,32 @@ public record AHRFoodHistory(List<Item> foods) {
         this(List.of());
     }
 
-    public AHRFoodHistory add(Item item, int maxSize) {
+    public AHRFoodHistory add(Item item, Level level) {
         List<Item> updated = new ArrayList<>(foods);
 
         updated.add(item);
+        int maxSize = getMaxSize(level);
 
         if (updated.size() > maxSize) {
             updated.removeFirst();
         }
 
         return new AHRFoodHistory(updated);
+    }
+
+    public static int getMaxSize(Level level) {
+        return switch (level.getDifficulty()) {
+            case NORMAL -> NORMAL_SIZE;
+            case HARD -> HARD_SIZE;
+            default -> EASY_SIZE;
+        };
+    }
+
+    public AHRFoodHistory updateSize(Level level) {
+        int maxSize = getMaxSize(level);
+
+        if (foods.size() <= maxSize) return this;
+        return new AHRFoodHistory(foods.subList(foods.size() - maxSize, foods.size()));
     }
 
     public static AHRFoodHistory get(Player player) {

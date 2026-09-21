@@ -4,6 +4,8 @@
   "package": "mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "BlockItemMixin",
+    "BlockMixin",
     "BlocksMixin",
     "ConsumableMixin",
     "FoodDataMixin",

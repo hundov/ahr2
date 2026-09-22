@@ -15,7 +15,10 @@ public class AHRBlockEntities {
             Identifier.fromNamespaceAndPath("ahr2", "crop"),
             FabricBlockEntityTypeBuilder.create(
                     AHRCropBlockEntity::new,
-                    Blocks.WHEAT
+                    Blocks.WHEAT,
+                    Blocks.CARROTS,
+                    Blocks.POTATOES,
+                    Blocks.BEETROOTS
             ).build()
     );
 

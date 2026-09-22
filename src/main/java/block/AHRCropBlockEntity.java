@@ -40,8 +40,7 @@ public class AHRCropBlockEntity extends BlockEntity {
 
         if (fullyGrownTick(level, random)) return;
         conditionTest(level, random);
-        if (tryDeath(level, random)) return;
-        if (random.nextInt(3) < (boneMealEffect ? 2 : 1)) advanceSubStage(level);
+        if (random.nextInt(3) < (boneMealEffect ? 2 : 1)) advanceSubStage(level, random);
 
         log.send("end");
     }
@@ -51,7 +50,7 @@ public class AHRCropBlockEntity extends BlockEntity {
         log.send("called");
 
         BlockState state = getBlockState();
-        if (state.getValue(AHRCropBlock.AGE) >= AHRCropBlock.MAX_AGE) {
+        if (state.getValue(AHRCropBlock.AGE) >= ((AHRCropBlock) state.getBlock()).getMaxAge()) {
             deathChance += fullyGrownDeathChance;
             conditionTest(level, random);
             tryDeath(level, random);
@@ -88,7 +87,7 @@ public class AHRCropBlockEntity extends BlockEntity {
         log.send("end");
     }
 
-    protected void applyBoneMeal(ServerLevel level) {
+    protected void applyBoneMeal(ServerLevel level, RandomSource random) {
         log.send("called");
 
         if (boneMealUsed) {
@@ -96,14 +95,14 @@ public class AHRCropBlockEntity extends BlockEntity {
             return;
         }
 
-        deathChance += 6;
+        deathChance += 4;
         boneMealUsed = true;
         boneMealEffect = true;
-        advanceSubStage(level);
+        advanceSubStage(level, random);
         log.send("end");
     }
 
-    protected void advanceSubStage(ServerLevel level) {
+    protected void advanceSubStage(ServerLevel level, RandomSource random) {
         log.send("called");
 
         subStage++;
@@ -112,14 +111,18 @@ public class AHRCropBlockEntity extends BlockEntity {
             subStage = 0;
             boneMealUsed = false;
 
+            if (tryDeath(level, random)) return;
+
             BlockState state = getBlockState();
             int age = state.getValue(AHRCropBlock.AGE);
 
-            level.setBlock(
-                    getBlockPos(),
-                    state.setValue(AHRCropBlock.AGE, age + 1),
-                    2
-            );
+            if (age < ((AHRCropBlock) state.getBlock()).getMaxAge()) {
+                level.setBlock(
+                        getBlockPos(),
+                        state.setValue(AHRCropBlock.AGE, age + 1),
+                        2
+                );
+            }
         }
 
         setChanged();

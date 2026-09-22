@@ -1,3 +1,4 @@
+import player.AHRInventoryExhaustion;
 import registry.AHRComponents;
 import events.AHRPlayerEvents;
 import registry.AHRLoot;
@@ -16,5 +17,6 @@ public class main implements ModInitializer {
         AHRNetworking.init();
         AHRPlayerEvents.init();
         AHRBlockEntities.init();
+        AHRInventoryExhaustion.init();
     }
 }

@@ -2,6 +2,10 @@
   "ahr2.sleep.negative_effect": "You cannot sleep while affected by a negative effect.",
   "ahr2.food.efficiency_half": "You feel that this food is less filling.",
   "ahr2.food.saturation_zero": "You feel that this food no longer satisfies you.",
+  "ahr2.food.spoiled_taste": "You can taste that this food is spoiled.",
 
-  "tag.item.ahr2.raw_food": "Raw Food"
+  "tag.item.ahr2.raw_food": "Raw Food",
+  "tag.item.ahr2.perishable": "Perishable Item",
+
+  "death.attack.spoiled_food": "%1$s died from spoiled food."
 }

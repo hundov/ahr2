@@ -12,7 +12,9 @@
     "FoodPropertiesMixin",
     "MobAccessor",
     "ServerPlayerMixin",
-    "ZombieMixin"
+    "ZombieMixin",
+    "recipe.RecipeAssemblyMixin",
+    "recipe.SingleItemRecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

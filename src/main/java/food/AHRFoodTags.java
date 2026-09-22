@@ -13,5 +13,11 @@ public class AHRFoodTags {
                     Identifier.fromNamespaceAndPath("ahr2", "raw_food")
             );
 
+    public static final TagKey<Item> PERISHABLE_ITEM =
+            TagKey.create(
+                    Registries.ITEM,
+                    Identifier.fromNamespaceAndPath("ahr2", "perishable")
+            );
+
     private AHRFoodTags() {}
 }

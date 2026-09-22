@@ -2,6 +2,10 @@
   "ahr2.sleep.negative_effect": "Вы не можете спать, пока на вас действует негативный эффект.",
   "ahr2.food.efficiency_half": "Вы чувствуете, что эта еда насыщает вас меньше.",
   "ahr2.food.saturation_zero": "Вы чувствуете, что эта еда более не насыщает Вас.",
+  "ahr2.food.spoiled_taste": "Вы чувствуете неприятный, несвежий вкус этой еды.",
 
-  "tag.item.ahr2.raw_food": "Сырая еда"
+  "tag.item.ahr2.raw_food": "Сырая еда",
+  "tag.item.ahr2.perishable": "Портящийся продукт",
+
+  "death.attack.spoiled_food": "%1$s умер от несвежей еды."
 }

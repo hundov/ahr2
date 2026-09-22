@@ -1,0 +1,87 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wheat",
+    "minecraft:hay_block",
+
+    "minecraft:apple",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+
+    "minecraft:carrot",
+    "minecraft:golden_carrot",
+
+    "minecraft:potato",
+    "minecraft:poisonous_potato",
+
+    "minecraft:beetroot",
+
+    "minecraft:melon",
+    "minecraft:melon_slice",
+
+    "minecraft:pumpkin",
+    "minecraft:carved_pumpkin",
+    "minecraft:pumpkin_pie",
+
+    "minecraft:sweet_berries",
+    "minecraft:glow_berries",
+
+    "minecraft:chorus_fruit",
+
+    "minecraft:egg",
+    "minecraft:blue_egg",
+    "minecraft:brown_egg",
+    "minecraft:milk_bucket",
+
+    "minecraft:beef",
+    "minecraft:cooked_beef",
+
+    "minecraft:porkchop",
+    "minecraft:cooked_porkchop",
+
+    "minecraft:chicken",
+    "minecraft:cooked_chicken",
+
+    "minecraft:mutton",
+    "minecraft:cooked_mutton",
+
+    "minecraft:rabbit",
+    "minecraft:cooked_rabbit",
+
+    "minecraft:cod",
+    "minecraft:cooked_cod",
+
+    "minecraft:salmon",
+    "minecraft:cooked_salmon",
+
+    "minecraft:tropical_fish",
+    "minecraft:pufferfish",
+
+    "minecraft:bread",
+    "minecraft:cookie",
+
+    "minecraft:cake",
+
+    "minecraft:beetroot_soup",
+    "minecraft:mushroom_stew",
+    "minecraft:rabbit_stew",
+    "minecraft:suspicious_stew",
+
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
+
+    "minecraft:kelp",
+    "minecraft:dried_kelp",
+    "minecraft:dried_kelp_block",
+
+    "minecraft:sugar_cane",
+    "minecraft:sugar",
+    "minecraft:cocoa_beans",
+
+    "minecraft:honey_bottle",
+    "minecraft:honey_block",
+
+    "minecraft:rotten_flesh",
+    "minecraft:spider_eye"
+  ]
+}

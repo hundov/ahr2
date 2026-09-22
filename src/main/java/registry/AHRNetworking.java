@@ -1,9 +1,10 @@
-package network;
+package registry;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
-import player.AHRFoodHistory;
+import network.AHRFoodHistoryPayload;
+import food.AHRFoodHistory;
 
 public class AHRNetworking {
 

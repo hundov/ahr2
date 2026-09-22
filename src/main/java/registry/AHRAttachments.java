@@ -1,9 +1,10 @@
-package player;
+package registry;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.resources.Identifier;
+import food.AHRFoodHistory;
 
 public class AHRAttachments {
 

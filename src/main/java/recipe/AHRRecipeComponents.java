@@ -1,9 +1,9 @@
 package recipe;
 
-import component.AHRComponents;
-import food.AHRFoodTags;
+import registry.AHRComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
+import registry.AHRFoodTags;
 import util.Logger;
 
 public class AHRRecipeComponents {

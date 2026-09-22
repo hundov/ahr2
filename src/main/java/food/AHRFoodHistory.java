@@ -1,4 +1,4 @@
-package player;
+package food;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,6 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import registry.AHRAttachments;
 
 import java.util.ArrayList;
 import java.util.List;

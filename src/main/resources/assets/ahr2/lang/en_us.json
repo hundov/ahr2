@@ -7,5 +7,11 @@
   "tag.item.ahr2.raw_food": "Raw Food",
   "tag.item.ahr2.perishable": "Perishable Item",
 
-  "death.attack.spoiled_food": "%1$s died from spoiled food."
+  "death.attack.spoiled_food": "%1$s died from spoiled food.",
+
+  "item.ahr2.bowl_with_water": "Bowl of Water",
+  "item.ahr2.bowl_with_egg": "Bowl with Egg",
+  "item.ahr2.bowl_with_egg_in_water": "Bowl with Egg in Water",
+  "item.ahr2.bowl_with_boiled_egg": "Bowl with Boiled Egg",
+  "item.ahr2.bowl_with_fried_egg": "Bowl with Fried Egg"
 }

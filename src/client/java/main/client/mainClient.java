@@ -3,7 +3,7 @@ package main.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import network.AHRFoodHistoryPayload;
-import player.AHRAttachments;
+import registry.AHRAttachments;
 
 public class mainClient implements ClientModInitializer {
 

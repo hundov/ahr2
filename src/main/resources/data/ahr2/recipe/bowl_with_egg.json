@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:bowl",
+    "#minecraft:eggs"
+  ],
+  "result": {
+    "id": "ahr2:bowl_with_egg",
+    "count": 1
+  }
+}

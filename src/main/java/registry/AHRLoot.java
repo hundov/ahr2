@@ -1,7 +1,5 @@
-package loot;
+package registry;
 
-import component.AHRComponents;
-import food.AHRFoodTags;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;

@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import player.AHRAttachments;
-import player.AHRFoodHistory;
+import registry.AHRAttachments;
+import food.AHRFoodHistory;
 
 @Mixin(Consumable.class)
 public class ConsumableMixin {

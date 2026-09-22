@@ -19,7 +19,7 @@ public class AHRShelfLife {
             Map.entry(Items.GOLDEN_APPLE, 15),
             Map.entry(Items.ENCHANTED_GOLDEN_APPLE, 60),
 
-            Map.entry(Items.CARROT, 7),
+            Map.entry(Items.CARROT, 14),
             Map.entry(Items.GOLDEN_CARROT, 14),
 
             Map.entry(Items.POTATO, 14),
@@ -28,7 +28,7 @@ public class AHRShelfLife {
             Map.entry(Items.BEETROOT, 7),
 
             Map.entry(Items.MELON, 7),
-            Map.entry(Items.MELON_SLICE, 3),
+            Map.entry(Items.MELON_SLICE, 5),
 
             Map.entry(Items.PUMPKIN, 14),
             Map.entry(Items.CARVED_PUMPKIN, 7),
@@ -39,9 +39,9 @@ public class AHRShelfLife {
             Map.entry(Items.CHORUS_FRUIT, 7),
 
             // Animal products
-            Map.entry(Items.EGG, 7),
-            Map.entry(Items.BLUE_EGG, 7),
-            Map.entry(Items.BROWN_EGG, 7),
+            Map.entry(Items.EGG, 4),
+            Map.entry(Items.BLUE_EGG, 4),
+            Map.entry(Items.BROWN_EGG, 4),
             Map.entry(Items.MILK_BUCKET, 3),
 
             // Raw meat
@@ -69,10 +69,10 @@ public class AHRShelfLife {
             Map.entry(Items.COOKED_SALMON, 3),
 
             // Bakery
-            Map.entry(Items.BREAD, 5),
-            Map.entry(Items.COOKIE, 7),
+            Map.entry(Items.BREAD, 31),
+            Map.entry(Items.COOKIE, 14),
             Map.entry(Items.CAKE, 3),
-            Map.entry(Items.PUMPKIN_PIE, 5),
+            Map.entry(Items.PUMPKIN_PIE, 7),
 
             // Soups / stews
             Map.entry(Items.BEETROOT_SOUP, 2),

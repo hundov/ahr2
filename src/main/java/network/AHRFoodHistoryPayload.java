@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import player.AHRFoodHistory;
+import food.AHRFoodHistory;
 
 public record AHRFoodHistoryPayload(AHRFoodHistory history) implements CustomPacketPayload {
 

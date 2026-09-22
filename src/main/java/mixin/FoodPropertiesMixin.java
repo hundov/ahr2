@@ -1,8 +1,8 @@
 package mixin;
 
-import component.AHRComponents;
-import damage.AHRDamageTypes;
-import food.AHRFoodTags;
+import registry.AHRComponents;
+import registry.AHRDamageTypes;
+import registry.AHRFoodTags;
 import food.AHRShelfLife;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -21,15 +21,15 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
-import network.AHRNetworking;
+import registry.AHRNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import player.AHRAttachments;
-import player.AHRFoodHistory;
+import registry.AHRAttachments;
+import food.AHRFoodHistory;
 import util.Logger;
 
 @Mixin(FoodProperties.class)

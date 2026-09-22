@@ -1,9 +1,10 @@
-import component.AHRComponents;
+import registry.AHRComponents;
 import events.AHRPlayerEvents;
-import loot.AHRLoot;
+import registry.AHRLoot;
 import net.fabricmc.api.ModInitializer;
-import network.AHRNetworking;
+import registry.AHRNetworking;
 import registry.AHRBlockEntities;
+import registry.AHRItems;
 
 public class main implements ModInitializer {
 
@@ -11,6 +12,7 @@ public class main implements ModInitializer {
     public void onInitialize() {
         AHRComponents.init();
         AHRLoot.init();
+        AHRItems.init();
         AHRNetworking.init();
         AHRPlayerEvents.init();
         AHRBlockEntities.init();

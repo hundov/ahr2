@@ -2,8 +2,8 @@ package events;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.level.ServerPlayer;
-import player.AHRAttachments;
-import player.AHRFoodHistory;
+import registry.AHRAttachments;
+import food.AHRFoodHistory;
 import util.Logger;
 
 public class AHRPlayerEvents {

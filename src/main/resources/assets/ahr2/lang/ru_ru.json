@@ -7,5 +7,11 @@
   "tag.item.ahr2.raw_food": "Сырая еда",
   "tag.item.ahr2.perishable": "Портящийся продукт",
 
-  "death.attack.spoiled_food": "%1$s умер от несвежей еды."
+  "death.attack.spoiled_food": "%1$s умер от несвежей еды.",
+
+  "item.ahr2.bowl_with_water": "Миска с водой",
+  "item.ahr2.bowl_with_egg": "Миска с яйцом",
+  "item.ahr2.bowl_with_egg_in_water": "Миска с яйцом в воде",
+  "item.ahr2.bowl_with_boiled_egg": "Миска с варёным яйцом",
+  "item.ahr2.bowl_with_fried_egg": "Миска с жареным яйцом"
 }

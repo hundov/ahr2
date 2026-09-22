@@ -10,6 +10,7 @@
     "ConsumableMixin",
     "FoodDataMixin",
     "FoodPropertiesMixin",
+    "ItemsMixin",
     "MobAccessor",
     "ServerPlayerMixin",
     "ZombieMixin",

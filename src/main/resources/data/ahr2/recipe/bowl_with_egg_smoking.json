@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": "ahr2:bowl_with_egg",
+  "result": {
+    "id": "ahr2:bowl_with_fried_egg"
+  },
+  "experience": 0.1,
+  "cookingtime": 400
+}

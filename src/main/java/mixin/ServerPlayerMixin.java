@@ -4,21 +4,18 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
@@ -41,9 +38,6 @@ public abstract class ServerPlayerMixin {
     private static final float JUMP_EXHAUSTION = 0.1F; // default 0.05
     @Unique
     private static final float SPRINT_JUMP_EXHAUSTION = 0.5F; // default 0.2
-
-    @Invoker("didNotMove")
-    protected abstract boolean invokeDidNotMove(double dx, double dy, double dz);
 
     @Inject(
             method = "restoreFrom",
@@ -83,124 +77,82 @@ public abstract class ServerPlayerMixin {
         }
     }
 
-    /**
-     * @author hundov
-     * @reason Allows AHR to independently balance exhaustion costs for different movement types.
-     */
-    @Overwrite
-    public void checkMovementStatistics(
-            final double dx,
-            final double dy,
-            final double dz
-    ) {
+    // swimming
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 0),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifySwimmingExhaustion(double dx, double dy, double dz, CallbackInfo ci, int distance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(SWIM_EXHAUSTION * (float) distance * 0.01F);
+        ci.cancel(); // Отменяем ванильный вызов causeFoodExhaustion, который шел следом
+    }
 
-        if (!player.isPassenger() && !invokeDidNotMove(dx, dy, dz)) {
-            if (player.isSwimming()) {
-                int distance = Math.round(
-                        (float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F
-                );
+    // underwater
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 1),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifyUnderwaterExhaustion(double dx, double dy, double dz, CallbackInfo ci, int distance) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(UNDERWATER_EXHAUSTION * (float) distance * 0.01F);
+        ci.cancel();
+    }
 
-                if (distance > 0) {
-                    player.awardStat(Stats.SWIM_ONE_CM, distance);
-                    player.causeFoodExhaustion(
-                            SWIM_EXHAUSTION * distance * 0.01F
-                    );
-                }
-            } else if (player.isEyeInFluid(FluidTags.WATER)) {
-                int distance = Math.round(
-                        (float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F
-                );
+    // in water
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 2),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifyWaterWalkExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(WATER_WALK_EXHAUSTION * (float) horizontalDistance * 0.01F);
+        ci.cancel();
+    }
 
-                if (distance > 0) {
-                    player.awardStat(
-                            Stats.WALK_UNDER_WATER_ONE_CM,
-                            distance
-                    );
+    // 4. sprint
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 3),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifySprintExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(SPRINT_EXHAUSTION * (float) horizontalDistance * 0.01F);
+        ci.cancel();
+    }
 
-                    player.causeFoodExhaustion(
-                            UNDERWATER_EXHAUSTION * distance * 0.01F
-                    );
-                }
-            } else if (player.isInWater()) {
-                int horizontalDistance = Math.round(
-                        (float) Math.sqrt(dx * dx + dz * dz) * 100.0F
-                );
+    // shift
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 4),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifyCrouchExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(SHIFT_EXHAUSTION * (float) horizontalDistance * 0.01F);
+        ci.cancel();
+    }
 
-                if (horizontalDistance > 0) {
-                    player.awardStat(
-                            Stats.WALK_ON_WATER_ONE_CM,
-                            horizontalDistance
-                    );
-
-                    player.causeFoodExhaustion(
-                            WATER_WALK_EXHAUSTION * horizontalDistance * 0.01F
-                    );
-                }
-            } else if (player.onClimbable()) {
-                if (dy > 0.0F) {
-                    player.awardStat(
-                            Stats.CLIMB_ONE_CM,
-                            (int) Math.round(dy * 100.0F)
-                    );
-                }
-            } else if (player.onGround()) {
-                int horizontalDistance = Math.round(
-                        (float) Math.sqrt(dx * dx + dz * dz) * 100.0F
-                );
-
-                if (horizontalDistance > 0) {
-                    if (player.isSprinting()) {
-                        player.awardStat(
-                                Stats.SPRINT_ONE_CM,
-                                horizontalDistance
-                        );
-
-                        player.causeFoodExhaustion(
-                                SPRINT_EXHAUSTION * horizontalDistance * 0.01F
-                        );
-                    } else if (player.isCrouching()) {
-                        player.awardStat(
-                                Stats.CROUCH_ONE_CM,
-                                horizontalDistance
-                        );
-
-                        player.causeFoodExhaustion(
-                                SHIFT_EXHAUSTION * horizontalDistance * 0.01F
-                        );
-                    } else {
-                        player.awardStat(
-                                Stats.WALK_ONE_CM,
-                                horizontalDistance
-                        );
-
-                        player.causeFoodExhaustion(
-                                WALK_EXHAUSTION * horizontalDistance * 0.01F
-                        );
-                    }
-                }
-            } else if (player.isFallFlying()) {
-                int distance = Math.round(
-                        (float) Math.sqrt(dx * dx + dy * dy + dz * dz) * 100.0F
-                );
-
-                player.awardStat(
-                        Stats.AVIATE_ONE_CM,
-                        distance
-                );
-            } else {
-                int horizontalDistance = Math.round(
-                        (float) Math.sqrt(dx * dx + dz * dz) * 100.0F
-                );
-
-                if (horizontalDistance > 25) {
-                    player.awardStat(
-                            Stats.FLY_ONE_CM,
-                            horizontalDistance
-                    );
-                }
-            }
-        }
+    // walk
+    @Inject(
+            method = "checkMovementStatistics",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 5),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private void modifyWalkExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        player.causeFoodExhaustion(WALK_EXHAUSTION * (float) horizontalDistance * 0.01F);
+        ci.cancel();
     }
 
     @ModifyConstant(

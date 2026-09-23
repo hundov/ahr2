@@ -7,6 +7,11 @@
 # Gradle build folder
 build
 
+# agents
+temp
+temp-mc-sources
+AGENTS.md
+
 # IntelliJ
 out/
 .idea

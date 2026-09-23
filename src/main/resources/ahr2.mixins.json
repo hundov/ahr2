@@ -14,6 +14,10 @@
     "MobAccessor",
     "ServerPlayerMixin",
     "ZombieMixin",
+    "animals.AbstractCowMixin",
+    "animals.ChickenMixin",
+    "animals.PigMixin",
+    "animals.SheepMixin",
     "recipe.RecipeAssemblyMixin",
     "recipe.SingleItemRecipeMixin"
   ],

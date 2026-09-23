@@ -7,12 +7,8 @@ public class Logger {
     private static final StackWalker STACK_WALKER =
             StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
-    public void send(String message) {
-        if (!enabled) {
-            return;
-        }
-
-        String caller = STACK_WALKER.walk(frames -> frames
+    private String getCaller() {
+        return STACK_WALKER.walk(frames -> frames
                 .skip(1)
                 .findFirst()
                 .map(frame ->
@@ -22,6 +18,14 @@ public class Logger {
                                 + "()"
                 )
                 .orElse("Unknown"));
+    }
+
+    public void send(String message) {
+        if (!enabled) {
+            return;
+        }
+
+        String caller = getCaller();
 
         System.out.println("[" + caller + "] " + message);
     }

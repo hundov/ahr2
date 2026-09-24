@@ -8,6 +8,7 @@
     "BlockMixin",
     "BlocksMixin",
     "ConsumableMixin",
+    "DataComponentsMixin",
     "FoodDataMixin",
     "FoodPropertiesMixin",
     "ItemMixin",
@@ -19,6 +20,7 @@
     "animals.ChickenMixin",
     "animals.PigMixin",
     "animals.SheepMixin",
+    "blocks.CakeBlockMixin",
     "recipe.RecipeAssemblyMixin",
     "recipe.SingleItemRecipeMixin"
   ],

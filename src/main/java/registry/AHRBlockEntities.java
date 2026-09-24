@@ -1,6 +1,7 @@
 package registry;
 
 import block.AHRCropBlockEntity;
+import food.cake.CakeBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +22,18 @@ public class AHRBlockEntities {
                     Blocks.BEETROOTS
             ).build()
     );
+
+    public static final BlockEntityType<CakeBlockEntity> CAKE = Registry.register(
+            BuiltInRegistries.BLOCK_ENTITY_TYPE,
+            Identifier.fromNamespaceAndPath("ahr2", "cake"),
+            FabricBlockEntityTypeBuilder.create(
+                    CakeBlockEntity::new,
+                    Blocks.CAKE
+            ).build()
+    );
+
+
+    private AHRBlockEntities() {}
 
     public static void init() {}
 

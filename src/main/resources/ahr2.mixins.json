@@ -9,6 +9,7 @@
     "BlocksMixin",
     "ConsumableMixin",
     "DataComponentsMixin",
+    "EntityTypeMixin",
     "FoodDataMixin",
     "FoodPropertiesMixin",
     "ItemMixin",

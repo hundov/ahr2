@@ -17,17 +17,51 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import registry.AHRAttachments;
-import registry.AHRComponents;
-import registry.AHRDamageTypes;
-import registry.AHRFoodTags;
-import registry.AHRNetworking;
+import registry.*;
 
 public final class AHRFoodConsumption {
 
-    public static final float SATURATION_MULTIPLIER = 0.25F;
+    private static final float SATURATION_MULTIPLIER_PEACEFUL = 1.0F;
+    private static final float SATURATION_MULTIPLIER_EASY = 0.75F;
+    private static final float SATURATION_MULTIPLIER_NORMAL = 0.5F;
+    private static final float SATURATION_MULTIPLIER_HARD = 0.25F;
+    private static final float SATURATION_MULTIPLIER_HARDCORE = 0.1F;
 
-    private AHRFoodConsumption() {
+    private static final float NETHER_FOOD_DIVISOR = 2.0F;
+    private static final float END_FOOD_DIVISOR = 4.0F;
+
+    public static float getNutritionMultiplier(Level level) {
+
+        float multiplier = 1.0f;
+
+        if (level.getLevelData().isHardcore()) multiplier /= 2.0F;
+
+        if (level.dimension() == Level.NETHER) multiplier /= NETHER_FOOD_DIVISOR;
+        else if (level.dimension() == Level.END) multiplier /= END_FOOD_DIVISOR;
+
+        return multiplier;
+
+    }
+
+    public static float getSaturationMultiplier(Level level) {
+
+        float multiplier;
+
+        if (level.getLevelData().isHardcore()) {
+            multiplier = SATURATION_MULTIPLIER_HARDCORE;
+        } else {
+            multiplier = switch (level.getDifficulty()) {
+                case EASY -> SATURATION_MULTIPLIER_EASY;
+                case NORMAL -> SATURATION_MULTIPLIER_NORMAL;
+                case HARD -> SATURATION_MULTIPLIER_HARD;
+                default -> SATURATION_MULTIPLIER_PEACEFUL;
+            };
+        }
+
+        if (level.dimension() == Level.NETHER) multiplier /= NETHER_FOOD_DIVISOR;
+        else if (level.dimension() == Level.END) multiplier /= END_FOOD_DIVISOR;
+
+        return multiplier;
     }
 
     public static boolean canConsume(Player player, Item item) {
@@ -111,16 +145,18 @@ public final class AHRFoodConsumption {
         AHRFoodHistory history =
                 player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
 
-        int previousCount = history.count(item);
         int efficiency = history.getEfficiency(item);
 
         int adjustedNutrition = (int) Math.floor(
-                nutrition * efficiency / 100.0
+                nutrition
+                        * getNutritionMultiplier(level)
+                        * efficiency
+                        / 100.0F
         );
 
         float adjustedSaturation =
                 saturation
-                        * SATURATION_MULTIPLIER
+                        * getSaturationMultiplier(level)
                         * efficiency
                         / 100.0F;
 

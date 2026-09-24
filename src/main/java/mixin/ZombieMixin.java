@@ -2,6 +2,8 @@ package mixin;
 
 import entity.goal.ZombieDestroyCropGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,11 +19,23 @@ public class ZombieMixin {
     private void addAHRGoals(CallbackInfo ci) {
         Zombie zombie = (Zombie) (Object) this;
 
-        GoalSelector goalSelector = ((MobAccessor) (Object) zombie).getGoalSelector();
+        MobAccessor accessor = (MobAccessor) (Object) zombie;
+
+        GoalSelector goalSelector = accessor.getGoalSelector();
+        GoalSelector targetSelector = accessor.getTargetSelector();
 
         goalSelector.addGoal(
                 4,
-                new ZombieDestroyCropGoal(zombie, 1.0, 3)
+                new ZombieDestroyCropGoal(zombie, 1.0D, 3)
+        );
+
+        targetSelector.addGoal(
+                3,
+                new NearestAttackableTargetGoal<>(
+                        zombie,
+                        Animal.class,
+                        true
+                )
         );
     }
 

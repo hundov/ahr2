@@ -21,6 +21,7 @@
     "animals.PigMixin",
     "animals.SheepMixin",
     "blocks.CakeBlockMixin",
+    "effects.PoisonMobEffectMixin",
     "recipe.RecipeAssemblyMixin",
     "recipe.SingleItemRecipeMixin"
   ],

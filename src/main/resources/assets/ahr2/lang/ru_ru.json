@@ -13,5 +13,8 @@
   "item.ahr2.bowl_with_egg": "Миска с яйцом",
   "item.ahr2.bowl_with_egg_in_water": "Миска с яйцом в воде",
   "item.ahr2.bowl_with_boiled_egg": "Миска с варёным яйцом",
-  "item.ahr2.bowl_with_fried_egg": "Миска с жареным яйцом"
+  "item.ahr2.bowl_with_fried_egg": "Миска с жареным яйцом",
+
+  "advancements.ahr2.egg.title": "Теперь не бесполезное",
+  "advancements.ahr2.egg.description": "Выглядит аппетитно…"
 }

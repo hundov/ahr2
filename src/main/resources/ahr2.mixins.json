@@ -10,6 +10,7 @@
     "ConsumableMixin",
     "FoodDataMixin",
     "FoodPropertiesMixin",
+    "ItemMixin",
     "ItemsMixin",
     "MobAccessor",
     "ServerPlayerMixin",

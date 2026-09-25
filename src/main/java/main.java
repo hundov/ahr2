@@ -13,6 +13,8 @@ public class main implements ModInitializer {
         AHRLoot.init();
         AHRItems.init();
 
+        AHRGameEvents.init();
+
         AHRNetworking.init();
 
         AHRPlayerEvents.init();

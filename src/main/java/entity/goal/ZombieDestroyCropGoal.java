@@ -26,9 +26,15 @@ public class ZombieDestroyCropGoal extends MoveToBlockGoal {
 
     private static final int WAIT_AFTER_BLOCK_FOUND = 20;
 
+    private static final int UNREACHABLE_CONFIRMATION_TICKS = 40;
+
     private final PathfinderMob removerMob;
 
     private int ticksSinceReachedGoal;
+
+    private int unreachableTicks;
+
+    private double bestDistanceToTarget = Double.MAX_VALUE;
 
     public ZombieDestroyCropGoal(
             PathfinderMob mob,
@@ -63,15 +69,22 @@ public class ZombieDestroyCropGoal extends MoveToBlockGoal {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-        this.removerMob.fallDistance = 1.0D;
+    public void start() {
+        super.start();
+
+        this.ticksSinceReachedGoal = 0;
+        this.unreachableTicks = 0;
+        this.bestDistanceToTarget = Double.MAX_VALUE;
     }
 
     @Override
-    public void start() {
-        super.start();
-        this.ticksSinceReachedGoal = 0;
+    public void stop() {
+        super.stop();
+
+        this.removerMob.fallDistance = 1.0D;
+
+        this.unreachableTicks = 0;
+        this.bestDistanceToTarget = Double.MAX_VALUE;
     }
 
     @Override
@@ -82,6 +95,8 @@ public class ZombieDestroyCropGoal extends MoveToBlockGoal {
         BlockPos mobPos = this.removerMob.blockPosition();
         BlockPos cropPos = this.getPosWithCrop(mobPos, level);
         RandomSource random = this.removerMob.getRandom();
+
+        this.updateUnreachableState();
 
         if (this.isReachedTarget() && cropPos != null) {
             if (this.ticksSinceReachedGoal > 0) {
@@ -157,6 +172,37 @@ public class ZombieDestroyCropGoal extends MoveToBlockGoal {
         }
     }
 
+    private void updateUnreachableState() {
+        if (this.isReachedTarget()) {
+            this.unreachableTicks = 0;
+            this.bestDistanceToTarget = Double.MAX_VALUE;
+            return;
+        }
+
+        double distanceToTarget = this.removerMob.distanceToSqr(
+                this.blockPos.getX() + 0.5D,
+                this.blockPos.getY() + 1.0D,
+                this.blockPos.getZ() + 0.5D
+        );
+
+        if (distanceToTarget < this.bestDistanceToTarget) {
+            this.bestDistanceToTarget = distanceToTarget;
+            this.unreachableTicks = 0;
+            return;
+        }
+
+        ++this.unreachableTicks;
+    }
+
+    public boolean isTargetUnreachable() {
+        return this.unreachableTicks >= UNREACHABLE_CONFIRMATION_TICKS;
+    }
+
+    public void resetUnreachableState() {
+        this.unreachableTicks = 0;
+        this.bestDistanceToTarget = Double.MAX_VALUE;
+    }
+
     protected void playDestroyProgressSound(
             LevelAccessor level,
             BlockPos pos
@@ -228,12 +274,10 @@ public class ZombieDestroyCropGoal extends MoveToBlockGoal {
             return false;
         }
 
-        BlockGetter blockGetter = chunk;
-
-        return blockGetter.getBlockState(pos).getBlock()
+        return chunk.getBlockState(pos).getBlock()
                 instanceof AHRCropBlock
-                && blockGetter.getBlockState(pos.above()).isAir()
-                && blockGetter.getBlockState(pos.above(2)).isAir();
+                && chunk.getBlockState(pos.above()).isAir()
+                && chunk.getBlockState(pos.above(2)).isAir();
     }
 
     @Override

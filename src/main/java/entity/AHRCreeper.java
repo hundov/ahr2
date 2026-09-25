@@ -16,6 +16,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import org.jspecify.annotations.Nullable;
+import registry.AHRGameEvents;
 
 import java.util.EnumSet;
 import java.util.function.BiConsumer;
@@ -126,7 +127,8 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
                     || event.is(GameEvent.BLOCK_OPEN)
                     || event.is(GameEvent.BLOCK_CLOSE)
                     || event.is(GameEvent.CONTAINER_OPEN)
-                    || event.is(GameEvent.CONTAINER_CLOSE);
+                    || event.is(GameEvent.CONTAINER_CLOSE)
+                    || event.is(AHRGameEvents.ZOMBIE_STUCK_KEY);
         }
 
         @Override

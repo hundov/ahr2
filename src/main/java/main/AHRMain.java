@@ -20,6 +20,7 @@ public class AHRMain implements ModInitializer {
         AHRGameEvents.init();
 
         AHREffects.init();
+        AHRConsumeEffects.init();
 
         AHRNetworking.init();
 

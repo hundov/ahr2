@@ -20,16 +20,16 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(AbstractSkeleton.class)
 public abstract class SkeletonMixin {
 
-    private static final double FOLLOW_RANGE = 72.0D;
+    private static final double FOLLOW_RANGE = 36.0D;
 
-    private static final double MOVEMENT_SPEED = 0.35D;
+    private static final double MOVEMENT_SPEED = 0.30D;
 
-    private static final int ATTACK_INTERVAL_TICKS = 12;
-    private static final int HARD_ATTACK_INTERVAL_TICKS = 6;
+    private static final int ATTACK_INTERVAL_TICKS = 18;
+    private static final int HARD_ATTACK_INTERVAL_TICKS = 10;
 
-    private static final float EASY_SPREAD = 4.0F;
-    private static final float NORMAL_SPREAD = 2.0F;
-    private static final float HARD_SPREAD = 1.0F;
+    private static final float EASY_SPREAD = 6.0F;
+    private static final float NORMAL_SPREAD = 3.0F;
+    private static final float HARD_SPREAD = 2.0F;
 
     @ModifyArgs(
             method = "performRangedAttack",

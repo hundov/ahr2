@@ -1,5 +1,6 @@
 package registry;
 
+import main.AHRMain;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -12,7 +13,7 @@ public final class AHRGameEvents {
             ResourceKey.create(
                     BuiltInRegistries.GAME_EVENT.key(),
                     Identifier.fromNamespaceAndPath(
-                            "ahr2",
+                            AHRMain.MOD_ID,
                             "zombie_stuck"
                     )
             );

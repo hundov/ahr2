@@ -36,10 +36,6 @@ public abstract class EntityTypeMixin<T extends Entity> {
                             (EntityType<? extends Creeper>) type,
                             level
                     );
-
-            System.out.println(
-                    "[AHR2] Replaced factory for: " + name.identifier()
-            );
         }
     }
 }

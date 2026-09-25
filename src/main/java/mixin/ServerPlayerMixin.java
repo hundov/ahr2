@@ -6,8 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -16,10 +18,30 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import registry.AHRAttachments;
+import registry.AHREffects;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
 
+
+    // ------------------------------------------- insomnia block
+
+    @Unique
+    private static final long MIN_SLEEP_DURATION_TICKS = 100L;
+
+    @Unique
+    private long sleepStartTime;
+
+    @Unique
+    private boolean wasSleeping;
+
+    @Unique
+    private static final int INSOMNIA_MIN_DURATION_TICKS = 2 * 60 * 20;
+    @Unique
+    private static final int INSOMNIA_MAX_DURATION_TICKS = 10 * 60 * 20;
+
+    // ------------------------------------------- exhaustion block
     @Unique
     private static final float SPRINT_EXHAUSTION = 0.25F; // default 0.1
     @Unique
@@ -58,23 +80,106 @@ public abstract class ServerPlayerMixin {
     }
 
     @Inject(
-            method = "startSleepInBed",
+            method = "startSleeping",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void preventSleepWithNegativeEffects(BlockPos pos, CallbackInfoReturnable<Either<Player.BedSleepingProblem, Unit>> cir) {
+    private void handleStartSleeping(
+            BlockPos pos,
+            CallbackInfo ci
+    ) {
         ServerPlayer player = (ServerPlayer) (Object) this;
+
         boolean hasNegativeEffect = player.getActiveEffects().stream()
-                .anyMatch(effect -> effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL);
+                .anyMatch(effect ->
+                        effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL
+                );
 
         if (hasNegativeEffect) {
             player.sendOverlayMessage(
                     Component.translatable("ahr2.sleep.negative_effect")
             );
-            cir.setReturnValue(
-                    Either.left(Player.BedSleepingProblem.OTHER_PROBLEM)
-            );
+
+            ci.cancel();
+            return;
         }
+
+        float insomniaChance = player.getAttachedOrCreate(
+                AHRAttachments.INSOMNIA_CHANCE
+        );
+
+        if (player.getRandom().nextFloat() < insomniaChance) {
+            int duration = INSOMNIA_MIN_DURATION_TICKS
+                    + player.getRandom().nextInt(
+                    INSOMNIA_MAX_DURATION_TICKS
+                            - INSOMNIA_MIN_DURATION_TICKS
+                            + 1
+            );
+
+            player.addEffect(
+                    new MobEffectInstance(AHREffects.INSOMNIA, duration)
+            );
+
+            player.sendOverlayMessage(
+                    Component.translatable("ahr2.sleep.insomnia")
+            );
+
+            player.setAttached(
+                    AHRAttachments.INSOMNIA_CHANCE,
+                    0.01F
+            );
+
+            ci.cancel();
+            return;
+        }
+
+        sleepStartTime = player.level().getGameTime();
+        wasSleeping = true;
+    }
+
+    @Inject(
+            method = "stopSleepInBed",
+            at = @At("HEAD")
+    )
+    private void increaseInsomniaChance(
+            boolean forcefulWakeUp,
+            boolean updateLevelList,
+            CallbackInfo ci
+    ) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+
+        System.out.println("trying sleep increase");
+
+        if (!wasSleeping) {
+            System.out.println("was not sleeping, skip");
+            return;
+        }
+
+        long sleepDuration = player.level().getGameTime() - sleepStartTime;
+
+        System.out.println("sleep duration: " + sleepDuration);
+
+        if (sleepDuration >= MIN_SLEEP_DURATION_TICKS) {
+            float insomniaChance = player.getAttachedOrCreate(
+                    AHRAttachments.INSOMNIA_CHANCE
+            );
+
+            player.setAttached(
+                    AHRAttachments.INSOMNIA_CHANCE,
+                    insomniaChance + 0.02F
+            );
+
+            System.out.println(
+                    "increased: "
+                            + insomniaChance
+                            + " -> "
+                            + player.getAttached(AHRAttachments.INSOMNIA_CHANCE)
+            );
+        } else {
+            System.out.println("sleep was too short, skip");
+        }
+
+        wasSleeping = false;
     }
 
     // swimming

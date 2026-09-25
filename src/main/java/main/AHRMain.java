@@ -1,9 +1,13 @@
+package main;
+
 import events.AHRPlayerEvents;
 import net.fabricmc.api.ModInitializer;
 import player.AHRInventoryExhaustion;
 import registry.*;
 
-public class main implements ModInitializer {
+public class AHRMain implements ModInitializer {
+
+    public static final String MOD_ID = "ahr2";
 
     @Override
     public void onInitialize() {
@@ -14,6 +18,8 @@ public class main implements ModInitializer {
         AHRItems.init();
 
         AHRGameEvents.init();
+
+        AHREffects.init();
 
         AHRNetworking.init();
 

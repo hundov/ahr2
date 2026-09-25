@@ -6,10 +6,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTable;
+import util.Logger;
 
 public class AHRLoot {
 
     private static final int MAX_CHEST_AGE = 24;
+
+    private static Logger LOG = new Logger();
+    static {
+        LOG.enabled = false;
+    }
 
     public static void init() {
         LootTableEvents.MODIFY_DROPS.register((holder, context, drops) -> {
@@ -38,8 +44,8 @@ public class AHRLoot {
                     );
                 }
 
-                System.out.println(
-                        "[AHR] MADE_ON: "
+                LOG.send(
+                        "MADE_ON: "
                                 + stack.getItem()
                                 + " -> "
                                 + stack.get(AHRComponents.MADE_ON)

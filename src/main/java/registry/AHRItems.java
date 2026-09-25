@@ -1,6 +1,7 @@
 package registry;
 
 import item.AHRBowlWithWaterItem;
+import main.AHRMain;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -67,7 +68,7 @@ public class AHRItems {
     private static ResourceKey<Item> create(String name) {
         return ResourceKey.create(
                 BuiltInRegistries.ITEM.key(),
-                Identifier.fromNamespaceAndPath("ahr2", name)
+                Identifier.fromNamespaceAndPath(AHRMain.MOD_ID, name)
         );
     }
 

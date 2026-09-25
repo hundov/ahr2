@@ -17,7 +17,7 @@
       "main.client.mainClient"
     ],
     "main": [
-      "main"
+      "main.AHRMain"
     ]
   },
   "mixins": [

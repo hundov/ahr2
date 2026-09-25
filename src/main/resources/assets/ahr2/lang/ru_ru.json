@@ -16,5 +16,8 @@
   "item.ahr2.bowl_with_fried_egg": "Миска с жареным яйцом",
 
   "advancements.ahr2.egg.title": "Теперь не бесполезное",
-  "advancements.ahr2.egg.description": "Выглядит аппетитно…"
+  "advancements.ahr2.egg.description": "Выглядит аппетитно…",
+
+  "effect.ahr2.insomnia": "Бессонница",
+  "ahr2.sleep.insomnia": "Вы чувствуете, что не можете уснуть"
 }

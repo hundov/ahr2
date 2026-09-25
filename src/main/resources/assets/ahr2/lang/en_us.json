@@ -16,5 +16,8 @@
   "item.ahr2.bowl_with_fried_egg": "Bowl with Fried Egg",
 
   "advancements.ahr2.egg.title": "Not So Useless Anymore",
-  "advancements.ahr2.egg.description": "Looks delicious…"
+  "advancements.ahr2.egg.description": "Looks delicious…",
+
+  "effect.ahr2.insomnia": "Insomnia",
+  "ahr2.sleep.insomnia": "You feel like you can't fall asleep"
 }

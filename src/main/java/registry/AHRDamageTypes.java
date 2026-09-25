@@ -1,5 +1,6 @@
 package registry;
 
+import main.AHRMain;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -10,7 +11,7 @@ public class AHRDamageTypes {
     public static final ResourceKey<DamageType> SPOILED_FOOD =
             ResourceKey.create(
                     Registries.DAMAGE_TYPE,
-                    Identifier.fromNamespaceAndPath("ahr2", "spoiled_food")
+                    Identifier.fromNamespaceAndPath(AHRMain.MOD_ID, "spoiled_food")
             );
 
     private AHRDamageTypes() {}

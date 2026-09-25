@@ -16,6 +16,7 @@
     "ItemsMixin",
     "MobAccessor",
     "ServerPlayerMixin",
+    "SkeletonMixin",
     "ZombieMixin",
     "animals.AbstractCowMixin",
     "animals.ChickenMixin",

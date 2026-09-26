@@ -20,11 +20,7 @@
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
-          {
-            "tags": [
-              "minecraft:eggs"
-            ]
-          }
+          { "items": "#minecraft:eggs" }
         ]
       }
     }

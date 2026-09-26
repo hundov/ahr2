@@ -26,10 +26,11 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
     private static final int VIBRATION_LISTENER_RADIUS = 48;
 
     private static final double VIBRATION_TARGET_REACH_DISTANCE = 2.0D;
-    private static final double VIBRATION_TARGET_TIMER_DISTANCE = 10.0D;
     private static final double VIBRATION_MOVEMENT_SPEED = 1.0D;
 
-    private static final int VIBRATION_TARGET_TIMEOUT_TICKS = 200;
+    private static final int VIBRATION_PROGRESS_CHECK_INTERVAL_TICKS = 20;
+    private static final int VIBRATION_TARGET_STUCK_TIMEOUT_TICKS = 200;
+    private static final double VIBRATION_MIN_PROGRESS = 0.25D;
 
     private final DynamicGameEventListener<VibrationSystem.Listener> dynamicGameEventListener =
             new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
@@ -38,7 +39,10 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
     private final VibrationSystem.Data vibrationData = new VibrationSystem.Data();
 
     private @Nullable BlockPos vibrationTarget;
-    private int vibrationTargetTime;
+
+    private double vibrationTargetLastDistance;
+    private int vibrationProgressCheckTimer;
+    private int vibrationTargetStuckTime;
 
     public AHRCreeper(EntityType<? extends Creeper> type, Level level) {
         super(type, level);
@@ -86,12 +90,24 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
 
     private void setVibrationTarget(BlockPos pos) {
         this.vibrationTarget = pos.immutable();
-        this.vibrationTargetTime = 0;
+        this.vibrationTargetLastDistance = Double.MAX_VALUE;
+        this.vibrationProgressCheckTimer = 0;
+        this.vibrationTargetStuckTime = 0;
     }
 
     private void clearVibrationTarget() {
         this.vibrationTarget = null;
-        this.vibrationTargetTime = 0;
+        this.vibrationTargetLastDistance = Double.MAX_VALUE;
+        this.vibrationProgressCheckTimer = 0;
+        this.vibrationTargetStuckTime = 0;
+    }
+
+    private void emitTargetUnreachableEvent(BlockPos target) {
+        this.level().gameEvent(
+                this,
+                AHRGameEvents.TARGET_UNREACHABLE,
+                target
+        );
     }
 
     private class VibrationUser implements VibrationSystem.User {
@@ -128,7 +144,7 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
                     || event.is(GameEvent.BLOCK_CLOSE)
                     || event.is(GameEvent.CONTAINER_OPEN)
                     || event.is(GameEvent.CONTAINER_CLOSE)
-                    || event.is(AHRGameEvents.ZOMBIE_STUCK_KEY);
+                    || event.is(AHRGameEvents.ZOMBIE_STUCK);
         }
 
         @Override
@@ -193,35 +209,29 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
                 return;
             }
 
-            double distanceSquared = this.creeper.distanceToSqr(
-                    target.getX() + 0.5D,
-                    target.getY() + 0.5D,
-                    target.getZ() + 0.5D
+            double distance = Math.sqrt(
+                    this.creeper.distanceToSqr(
+                            target.getX() + 0.5D,
+                            target.getY() + 0.5D,
+                            target.getZ() + 0.5D
+                    )
             );
 
-            if (distanceSquared
-                    <= VIBRATION_TARGET_REACH_DISTANCE
-                    * VIBRATION_TARGET_REACH_DISTANCE) {
-
+            if (distance <= VIBRATION_TARGET_REACH_DISTANCE) {
                 this.creeper.clearVibrationTarget();
                 this.creeper.ignite();
                 return;
             }
 
-            double timerDistanceSquared =
-                    VIBRATION_TARGET_TIMER_DISTANCE
-                            * VIBRATION_TARGET_TIMER_DISTANCE;
+            this.updateProgress(distance);
 
-            if (distanceSquared <= timerDistanceSquared) {
-                this.creeper.vibrationTargetTime++;
+            if (this.creeper.vibrationTargetStuckTime
+                    >= VIBRATION_TARGET_STUCK_TIMEOUT_TICKS) {
 
-                if (this.creeper.vibrationTargetTime
-                        >= VIBRATION_TARGET_TIMEOUT_TICKS) {
-
-                    this.creeper.clearVibrationTarget();
-                    this.creeper.ignite();
-                    return;
-                }
+                this.creeper.emitTargetUnreachableEvent(target);
+                this.creeper.clearVibrationTarget();
+                this.creeper.ignite();
+                return;
             }
 
             this.creeper.getNavigation().moveTo(
@@ -236,6 +246,37 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
                     target.getY() + 0.5D,
                     target.getZ() + 0.5D
             );
+        }
+
+        private void updateProgress(double currentDistance) {
+            this.creeper.vibrationProgressCheckTimer++;
+
+            if (this.creeper.vibrationProgressCheckTimer
+                    < VIBRATION_PROGRESS_CHECK_INTERVAL_TICKS) {
+                return;
+            }
+
+            this.creeper.vibrationProgressCheckTimer = 0;
+
+            if (this.creeper.vibrationTargetLastDistance
+                    == Double.MAX_VALUE) {
+
+                this.creeper.vibrationTargetLastDistance = currentDistance;
+                return;
+            }
+
+            double progress =
+                    this.creeper.vibrationTargetLastDistance
+                            - currentDistance;
+
+            if (progress >= VIBRATION_MIN_PROGRESS) {
+                this.creeper.vibrationTargetStuckTime = 0;
+            } else {
+                this.creeper.vibrationTargetStuckTime +=
+                        VIBRATION_PROGRESS_CHECK_INTERVAL_TICKS;
+            }
+
+            this.creeper.vibrationTargetLastDistance = currentDistance;
         }
 
         @Override

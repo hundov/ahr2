@@ -1,9 +1,15 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "main.mixin.client",
+  "package": "main.client.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "OptionsMixin",
+    "OptionInstanceMixin",
+    "OptionInstanceButtonMixin",
+    "DebugScreenEntriesMixin",
+    "DebugScreenEntryListMixin",
+    "DebugScreenOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

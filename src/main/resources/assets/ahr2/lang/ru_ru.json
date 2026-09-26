@@ -19,5 +19,7 @@
   "advancements.ahr2.egg.description": "Выглядит аппетитно…",
 
   "effect.ahr2.insomnia": "Бессонница",
-  "ahr2.sleep.insomnia": "Вы чувствуете, что не можете уснуть"
+  "ahr2.sleep.insomnia": "Вы чувствуете, что не можете уснуть",
+
+  "ahr2.debug.hardcore_message": "Потерял что-то?"
 }

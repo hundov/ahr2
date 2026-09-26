@@ -221,9 +221,7 @@ public class ZombieUnreachableTargetGoal extends Goal {
     private void emitZombieStuckEvent() {
         this.zombie.level().gameEvent(
                 this.zombie,
-                BuiltInRegistries.GAME_EVENT.getOrThrow(
-                        AHRGameEvents.ZOMBIE_STUCK_KEY
-                ),
+                AHRGameEvents.ZOMBIE_STUCK,
                 this.zombie.position()
         );
     }

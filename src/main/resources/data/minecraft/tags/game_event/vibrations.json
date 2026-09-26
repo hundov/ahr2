@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "ahr2:target_unreachable",
+    "ahr2:zombie_stuck"
+  ]
+}

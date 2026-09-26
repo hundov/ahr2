@@ -65,6 +65,12 @@ public class AHRItems {
                     .usingConvertsTo(Items.BOWL)
     );
 
+    public static final Item EMERALD_NUGGET = register(
+            create("emerald_nugget"),
+            Item::new,
+            new Item.Properties()
+    );
+
     private static ResourceKey<Item> create(String name) {
         return ResourceKey.create(
                 BuiltInRegistries.ITEM.key(),

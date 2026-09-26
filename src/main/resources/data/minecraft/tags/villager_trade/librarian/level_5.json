@@ -1,5 +1,7 @@
 {
+  "replace": true,
   "values": [
+    "minecraft:librarian/5/emerald_book_and_enchanted_book",
     "minecraft:librarian/5/emerald_yellow_candle",
     "minecraft:librarian/5/emerald_red_candle"
   ]

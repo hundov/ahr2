@@ -7,10 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import registry.AHRAttachments;
@@ -19,6 +16,14 @@ import registry.AHREffects;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
 
+
+    // ------------------------------------------- experience block
+
+    @Unique
+    private static final double AHR_XP_MULTIPLIER = 0.25D;
+
+    @Unique
+    private double experienceRemainder;
 
     // ------------------------------------------- insomnia block
 
@@ -72,6 +77,29 @@ public abstract class ServerPlayerMixin {
                     oldPlayer.getFoodData().getSaturationLevel()
             );
         }
+    }
+
+    @ModifyVariable(
+            method = "giveExperiencePoints",
+            at = @At("HEAD"),
+            argsOnly = true,
+            name = "i"
+    )
+    private int modifyExperienceGain(int amount) {
+        if (amount <= 0) {
+            return amount;
+        }
+
+        double scaledExperience = amount * AHR_XP_MULTIPLIER;
+        double totalExperience =
+                this.experienceRemainder + scaledExperience;
+
+        int wholeExperience = (int) totalExperience;
+
+        this.experienceRemainder =
+                totalExperience - wholeExperience;
+
+        return wholeExperience;
     }
 
     @Inject(

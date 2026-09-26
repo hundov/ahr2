@@ -1,12 +1,12 @@
 {
   "gives": {
-    "count": 6.0,
-    "id": "minecraft:emerald"
+    "count": 2.0,
+    "id": "ahr2:emerald_nugget"
   },
   "max_uses": 2.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 24.0,
+    "count": 16.0,
     "id": "minecraft:pumpkin"
   },
   "xp": 0.5

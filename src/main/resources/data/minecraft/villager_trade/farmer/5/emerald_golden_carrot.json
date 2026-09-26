@@ -7,7 +7,7 @@
   "reputation_discount": 0.05,
   "wants": {
     "count": 16.0,
-    "id": "minecraft:emerald"
+    "id": "minecraft:emerald_block"
   },
   "xp": 0.5
 }

@@ -1,4 +1,5 @@
 {
+  "replace": true,
   "values": [
     "minecraft:farmer/2/pumpkin_emerald",
     "minecraft:farmer/2/emerald_pumpkin_pie",

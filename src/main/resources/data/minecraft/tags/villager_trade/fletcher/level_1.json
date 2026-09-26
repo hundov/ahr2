@@ -1,4 +1,5 @@
 {
+  "replace": true,
   "values": [
     "minecraft:fletcher/1/emerald_arrow",
     "minecraft:fletcher/1/gravel_and_emerald_flint"

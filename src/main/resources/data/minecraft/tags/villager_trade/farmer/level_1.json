@@ -1,4 +1,5 @@
 {
+  "replace": true,
   "values": [
     "minecraft:farmer/1/wheat_emerald",
     "minecraft:farmer/1/potato_emerald",

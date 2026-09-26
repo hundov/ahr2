@@ -1,4 +1,5 @@
 {
+  "replace": true,
   "values": [
     "minecraft:fletcher/5/feather_emerald",
     "minecraft:fletcher/5/emerald_enchanted_crossbow",

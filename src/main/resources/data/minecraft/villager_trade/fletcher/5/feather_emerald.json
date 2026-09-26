@@ -2,11 +2,11 @@
   "gives": {
     "id": "minecraft:emerald"
   },
-  "max_uses": 16.0,
+  "max_uses": 1.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 32.0,
-    "id": "minecraft:stick"
+    "count": 16.0,
+    "id": "minecraft:feather"
   },
-  "xp": 2.0
+  "xp": 0.5
 }

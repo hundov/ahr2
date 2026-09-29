@@ -1,15 +1,8 @@
 package mixin;
 
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,25 +10,16 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import registry.AHRAttachments;
-import registry.AHREffects;
+
+import player.AHRPlayerDimensionAccess;
+import player.AHRPlayerExhaustion;
+import player.AHRPlayerExperience;
+import player.AHRPlayerSleep;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
 
-
-    @Unique
-    private static final Identifier NETHER_KNOWLEDGE =
-            Identifier.fromNamespaceAndPath("ahr2", "nether_knowledge");
-
-    @Unique
-    private static final Identifier END_KNOWLEDGE =
-            Identifier.fromNamespaceAndPath("ahr2", "end_knowledge");
-
     // ------------------------------------------- experience block
-
-    @Unique
-    private static final double AHR_XP_MULTIPLIER = 0.25D;
 
     @Unique
     private double experienceRemainder;
@@ -43,181 +27,55 @@ public abstract class ServerPlayerMixin {
     // ------------------------------------------- insomnia block
 
     @Unique
-    private static final long MIN_SLEEP_DURATION_TICKS = 100L;
-
-    @Unique
     private long sleepStartTime;
 
     @Unique
     private boolean wasSleeping;
 
-    @Unique
-    private static final int INSOMNIA_MIN_DURATION_TICKS = 2 * 60 * 20;
-    @Unique
-    private static final int INSOMNIA_MAX_DURATION_TICKS = 10 * 60 * 20;
-
-    // ------------------------------------------- exhaustion block
-    @Unique
-    private static final float SPRINT_EXHAUSTION = 0.25F; // default 0.1
-    @Unique
-    private static final float SHIFT_EXHAUSTION = 0.005F; // default 0
-    @Unique
-    private static final float WALK_EXHAUSTION = 0.01F; // default 0
-
-    @Unique
-    private static final float SWIM_EXHAUSTION = 0.03F; // default 0.01
-    @Unique
-    private static final float UNDERWATER_EXHAUSTION = 0.02F; // default 0.01
-    @Unique
-    private static final float WATER_WALK_EXHAUSTION = 0.02F; // default 0.01
-
-    @Unique
-    private static final float JUMP_EXHAUSTION = 0.1F; // default 0.05
-    @Unique
-    private static final float SPRINT_JUMP_EXHAUSTION = 0.5F; // default 0.2
-
-    @Inject(
-            method = "restoreFrom",
-            at = @At("TAIL")
-    )
+    @Inject(method = "restoreFrom", at = @At("TAIL"))
     private void preserveFoodData(ServerPlayer oldPlayer, boolean restoreAll, CallbackInfo ci) {
         if (!restoreAll) {
             ServerPlayer player = (ServerPlayer) (Object) this;
 
-            player.getFoodData().setFoodLevel(
-                    oldPlayer.getFoodData().getFoodLevel()
-            );
+            player.getFoodData().setFoodLevel(oldPlayer.getFoodData().getFoodLevel());
 
-            player.getFoodData().setSaturation(
-                    oldPlayer.getFoodData().getSaturationLevel()
-            );
+            player.getFoodData().setSaturation(oldPlayer.getFoodData().getSaturationLevel());
         }
     }
 
-    @Inject(
-            method = "teleport*",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private void ahr$checkDimensionAccess(
-            TeleportTransition transition,
-            CallbackInfoReturnable<ServerPlayer> cir
-    ) {
+    @Inject(method = "teleport*", at = @At("HEAD"), cancellable = true)
+    private void ahr$checkDimensionAccess(TeleportTransition transition, CallbackInfoReturnable<ServerPlayer> cir) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        ServerLevel newLevel = transition.newLevel();
 
-        if (newLevel.dimension() == Level.NETHER
-                && !ahr$hasAdvancement(player, NETHER_KNOWLEDGE)) {
+        if (AHRPlayerDimensionAccess.canEnter(player, transition.newLevel())) return;
 
-            player.sendOverlayMessage(
-                    Component.translatable("ahr2.teleport")
-            );
+        player.sendOverlayMessage(Component.translatable("ahr2.teleport"));
 
-            cir.setReturnValue(null);
-            return;
-        }
-
-        if (newLevel.dimension() == Level.END
-                && !ahr$hasAdvancement(player, END_KNOWLEDGE)) {
-
-            player.sendOverlayMessage(
-                    Component.translatable("ahr2.teleport")
-            );
-
-            cir.setReturnValue(null);
-        }
+        cir.setReturnValue(null);
     }
 
-    @Unique
-    private boolean ahr$hasAdvancement(
-            ServerPlayer player,
-            Identifier id
-    ) {
-        AdvancementHolder advancement =
-                player.level().getServer().getAdvancements().get(id);
+    // ---------------------------------------------
+    // Experience System
+    // ---------------------------------------------
 
-        if (advancement == null) {
-            return false;
-        }
-
-        return player.getAdvancements()
-                .getOrStartProgress(advancement)
-                .isDone();
-    }
-
-    @ModifyVariable(
-            method = "giveExperiencePoints",
-            at = @At("HEAD"),
-            argsOnly = true,
-            name = "i"
-    )
+    @ModifyVariable(method = "giveExperiencePoints", at = @At("HEAD"), argsOnly = true, name = "i")
     private int modifyExperienceGain(int amount) {
-        if (amount <= 0) {
-            return amount;
-        }
+        AHRPlayerExperience.Result result = AHRPlayerExperience.modify(amount, experienceRemainder);
 
-        double scaledExperience = amount * AHR_XP_MULTIPLIER;
-        double totalExperience =
-                this.experienceRemainder + scaledExperience;
+        experienceRemainder = result.remainder();
 
-        int wholeExperience = (int) totalExperience;
-
-        this.experienceRemainder =
-                totalExperience - wholeExperience;
-
-        return wholeExperience;
+        return result.experience();
     }
 
-    @Inject(
-            method = "startSleeping",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private void handleStartSleeping(
-            BlockPos pos,
-            CallbackInfo ci
-    ) {
+    // ---------------------------------------------
+    // Sleep System
+    // ---------------------------------------------
+
+    @Inject(method = "startSleeping", at = @At("HEAD"), cancellable = true)
+    private void handleStartSleeping(BlockPos pos, CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
 
-        boolean hasNegativeEffect = player.getActiveEffects().stream()
-                .anyMatch(effect ->
-                        effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL
-                );
-
-        if (hasNegativeEffect) {
-            player.sendOverlayMessage(
-                    Component.translatable("ahr2.sleep.negative_effect")
-            );
-
-            ci.cancel();
-            return;
-        }
-
-        float insomniaChance = player.getAttachedOrCreate(
-                AHRAttachments.INSOMNIA_CHANCE
-        );
-
-        if (player.getRandom().nextFloat() < insomniaChance) {
-            int duration = INSOMNIA_MIN_DURATION_TICKS
-                    + player.getRandom().nextInt(
-                    INSOMNIA_MAX_DURATION_TICKS
-                            - INSOMNIA_MIN_DURATION_TICKS
-                            + 1
-            );
-
-            player.addEffect(
-                    new MobEffectInstance(AHREffects.INSOMNIA, duration)
-            );
-
-            player.sendOverlayMessage(
-                    Component.translatable("ahr2.sleep.insomnia")
-            );
-
-            player.setAttached(
-                    AHRAttachments.INSOMNIA_CHANCE,
-                    0.01F
-            );
-
+        if (!AHRPlayerSleep.tryStartSleeping(player)) {
             ci.cancel();
             return;
         }
@@ -226,143 +84,85 @@ public abstract class ServerPlayerMixin {
         wasSleeping = true;
     }
 
-    @Inject(
-            method = "stopSleepInBed",
-            at = @At("HEAD")
-    )
-    private void increaseInsomniaChance(
-            boolean forcefulWakeUp,
-            boolean updateLevelList,
-            CallbackInfo ci
-    ) {
+    @Inject(method = "stopSleepInBed", at = @At("HEAD"))
+    private void increaseInsomniaChance(boolean forcefulWakeUp, boolean updateLevelList, CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
 
-        System.out.println("trying sleep increase");
-
-        if (!wasSleeping) {
-            System.out.println("was not sleeping, skip");
-            return;
-        }
+        if (!wasSleeping) return;
 
         long sleepDuration = player.level().getGameTime() - sleepStartTime;
 
-        System.out.println("sleep duration: " + sleepDuration);
-
-        if (sleepDuration >= MIN_SLEEP_DURATION_TICKS) {
-            float insomniaChance = player.getAttachedOrCreate(
-                    AHRAttachments.INSOMNIA_CHANCE
-            );
-
-            player.setAttached(
-                    AHRAttachments.INSOMNIA_CHANCE,
-                    insomniaChance + 0.02F
-            );
-
-            System.out.println(
-                    "increased: "
-                            + insomniaChance
-                            + " -> "
-                            + player.getAttached(AHRAttachments.INSOMNIA_CHANCE)
-            );
-        } else {
-            System.out.println("sleep was too short, skip");
-        }
+        AHRPlayerSleep.handleWakeUp(player, sleepDuration);
 
         wasSleeping = false;
     }
 
-    // swimming
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 0),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // ---------------------------------------------
+    // Exhaustion System
+    // ---------------------------------------------
+
+    // Swimming
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifySwimmingExhaustion(double dx, double dy, double dz, CallbackInfo ci, int distance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(SWIM_EXHAUSTION * (float) distance * 0.01F);
-        ci.cancel(); // Отменяем ванильный вызов causeFoodExhaustion, который шел следом
+
+        AHRPlayerExhaustion.applySwimming(player, distance);
+        ci.cancel();
     }
 
-    // underwater
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 1),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // Underwater
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 1), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifyUnderwaterExhaustion(double dx, double dy, double dz, CallbackInfo ci, int distance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(UNDERWATER_EXHAUSTION * (float) distance * 0.01F);
+
+        AHRPlayerExhaustion.applyUnderwater(player, distance);
         ci.cancel();
     }
 
-    // in water
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 2),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // Water Walk
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 2), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifyWaterWalkExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(WATER_WALK_EXHAUSTION * (float) horizontalDistance * 0.01F);
+
+        AHRPlayerExhaustion.applyWaterWalk(player, horizontalDistance);
         ci.cancel();
     }
 
-    // 4. sprint
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 3),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // Sprint
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 3), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifySprintExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(SPRINT_EXHAUSTION * (float) horizontalDistance * 0.01F);
+
+        AHRPlayerExhaustion.applySprint(player, horizontalDistance);
         ci.cancel();
     }
 
-    // shift
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 4),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // Shift
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 4), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifyCrouchExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(SHIFT_EXHAUSTION * (float) horizontalDistance * 0.01F);
+
+        AHRPlayerExhaustion.applyShift(player, horizontalDistance);
         ci.cancel();
     }
 
-    // walk
-    @Inject(
-            method = "checkMovementStatistics",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 5),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT
-    )
+    // Walk
+    @Inject(method = "checkMovementStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;causeFoodExhaustion(F)V", ordinal = 5), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     private void modifyWalkExhaustion(double dx, double dy, double dz, CallbackInfo ci, int horizontalDistance) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        player.causeFoodExhaustion(WALK_EXHAUSTION * (float) horizontalDistance * 0.01F);
+
+        AHRPlayerExhaustion.applyWalk(player, horizontalDistance);
         ci.cancel();
     }
 
-    @ModifyConstant(
-            method = "jumpFromGround",
-            constant = @Constant(floatValue = 0.2F)
-    )
+    @ModifyConstant(method = "jumpFromGround", constant = @Constant(floatValue = 0.2F))
     private float modifySprintJumpExhaustion(float original) {
-        return SPRINT_JUMP_EXHAUSTION;
+        return AHRPlayerExhaustion.SPRINT_JUMP_EXHAUSTION;
     }
 
-    @ModifyConstant(
-            method = "jumpFromGround",
-            constant = @Constant(floatValue = 0.05F)
-    )
+    @ModifyConstant(method = "jumpFromGround", constant = @Constant(floatValue = 0.05F))
     private float modifyJumpExhaustion(float original) {
-        return JUMP_EXHAUSTION;
+        return AHRPlayerExhaustion.JUMP_EXHAUSTION;
     }
 
 }

@@ -10,12 +10,26 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Zombie.class)
 public class ZombieMixin {
+
+    @Unique
+    private static final double MOVEMENT_SPEED = 0.26D;
+
+    @ModifyConstant(
+            method = "createAttributes",
+            constant = @Constant(doubleValue = 0.23000000417232513D) // ^-^
+    )
+    private static double modifyMovementSpeed(double original) {
+        return MOVEMENT_SPEED;
+    }
 
     @Inject(
             method = "registerGoals",

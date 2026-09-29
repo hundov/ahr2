@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "unlock": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:book"
+    },
+    "title": {
+      "translate": "advancements.ahr2.nether_knowledge.title"
+    },
+    "description": {
+      "translate": "advancements.ahr2.nether_knowledge.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

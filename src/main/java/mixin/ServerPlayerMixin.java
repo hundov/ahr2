@@ -1,14 +1,21 @@
 package mixin;
 
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.TeleportTransition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import registry.AHRAttachments;
 import registry.AHREffects;
@@ -16,6 +23,14 @@ import registry.AHREffects;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
 
+
+    @Unique
+    private static final Identifier NETHER_KNOWLEDGE =
+            Identifier.fromNamespaceAndPath("ahr2", "nether_knowledge");
+
+    @Unique
+    private static final Identifier END_KNOWLEDGE =
+            Identifier.fromNamespaceAndPath("ahr2", "end_knowledge");
 
     // ------------------------------------------- experience block
 
@@ -77,6 +92,57 @@ public abstract class ServerPlayerMixin {
                     oldPlayer.getFoodData().getSaturationLevel()
             );
         }
+    }
+
+    @Inject(
+            method = "teleport*",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void ahr$checkDimensionAccess(
+            TeleportTransition transition,
+            CallbackInfoReturnable<ServerPlayer> cir
+    ) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        ServerLevel newLevel = transition.newLevel();
+
+        if (newLevel.dimension() == Level.NETHER
+                && !ahr$hasAdvancement(player, NETHER_KNOWLEDGE)) {
+
+            player.sendOverlayMessage(
+                    Component.translatable("ahr2.teleport")
+            );
+
+            cir.setReturnValue(null);
+            return;
+        }
+
+        if (newLevel.dimension() == Level.END
+                && !ahr$hasAdvancement(player, END_KNOWLEDGE)) {
+
+            player.sendOverlayMessage(
+                    Component.translatable("ahr2.teleport")
+            );
+
+            cir.setReturnValue(null);
+        }
+    }
+
+    @Unique
+    private boolean ahr$hasAdvancement(
+            ServerPlayer player,
+            Identifier id
+    ) {
+        AdvancementHolder advancement =
+                player.level().getServer().getAdvancements().get(id);
+
+        if (advancement == null) {
+            return false;
+        }
+
+        return player.getAdvancements()
+                .getOrStartProgress(advancement)
+                .isDone();
     }
 
     @ModifyVariable(

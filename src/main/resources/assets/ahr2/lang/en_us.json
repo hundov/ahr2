@@ -20,9 +20,14 @@
 
   "advancements.ahr2.egg.title": "Not So Useless Anymore",
   "advancements.ahr2.egg.description": "Looks delicious…",
+  "advancements.ahr2.nether_knowledge.title": "Secrets of the Nether",
+  "advancements.ahr2.nether_knowledge.description": "Uncover the secret of the Nether",
+  "advancements.ahr2.end_knowledge.title": "Secrets of the End",
+  "advancements.ahr2.end_knowledge.description": "Uncover the secret of the End",
 
   "effect.ahr2.insomnia": "Insomnia",
   "ahr2.sleep.insomnia": "You feel like you can't fall asleep",
+  "ahr2.teleport": "This portal is not yet open to you",
 
   "ahr2.debug.hardcore_message": "Lost something?"
 }

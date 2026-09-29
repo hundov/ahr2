@@ -20,9 +20,14 @@
 
   "advancements.ahr2.egg.title": "Теперь не бесполезное",
   "advancements.ahr2.egg.description": "Выглядит аппетитно…",
+  "advancements.ahr2.nether_knowledge.title": "Тайны Нижнего мира",
+  "advancements.ahr2.nether_knowledge.description": "Познать тайну Нижнего мира",
+  "advancements.ahr2.end_knowledge.title": "Тайны Края",
+  "advancements.ahr2.end_knowledge.description": "Познать тайну Края",
 
   "effect.ahr2.insomnia": "Бессонница",
   "ahr2.sleep.insomnia": "Вы чувствуете, что не можете уснуть",
+  "ahr2.teleport": "Этот портал еще не открыт для тебя",
 
   "ahr2.debug.hardcore_message": "Потерял что-то?"
 }

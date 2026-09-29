@@ -78,6 +78,13 @@ public record AHRFoodHistory(List<Item> foods) {
         return player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
     }
 
+    public static void onPlayerJoin(Player player) {
+        AHRFoodHistory history = get(player);
+        AHRFoodHistory updated = history.updateSize(player.level());
+
+        if (updated != history) player.setAttached(AHRAttachments.FOOD_HISTORY, updated);
+    }
+
     public int count(Item item) {
         int count = 0;
 

@@ -3,7 +3,6 @@ package main;
 import events.AHRPlayerEvents;
 import events.AHRServerEvents;
 import net.fabricmc.api.ModInitializer;
-import player.AHRInventoryExhaustion;
 import registry.*;
 
 public class AHRMain implements ModInitializer {
@@ -30,6 +29,5 @@ public class AHRMain implements ModInitializer {
         AHRPlayerEvents.init();
 
         AHRBlockEntities.init();
-        AHRInventoryExhaustion.init();
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
-import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,7 +39,7 @@ public abstract class SkeletonMixin {
             )
     )
     private void modifyArrowSpread(Args args) {
-        if (!((Object) this instanceof Skeleton skeleton)) {
+        if ((Object) this instanceof WitherSkeleton) {
             return;
         }
 
@@ -65,16 +65,22 @@ public abstract class SkeletonMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void modifyAttributes(CallbackInfo ci) {
-        if (!((Object) this instanceof Skeleton skeleton)) {
+        if ((Object) this instanceof WitherSkeleton) {
             return;
         }
 
-        AttributeInstance movementSpeed = skeleton.getAttribute(Attributes.MOVEMENT_SPEED);
+        AbstractSkeleton skeleton = (AbstractSkeleton) (Object) this;
+
+        AttributeInstance movementSpeed =
+                skeleton.getAttribute(Attributes.MOVEMENT_SPEED);
+
         if (movementSpeed != null) {
             movementSpeed.setBaseValue(MOVEMENT_SPEED);
         }
 
-        AttributeInstance followRange = skeleton.getAttribute(Attributes.FOLLOW_RANGE);
+        AttributeInstance followRange =
+                skeleton.getAttribute(Attributes.FOLLOW_RANGE);
+
         if (followRange != null) {
             followRange.setBaseValue(FOLLOW_RANGE);
         }
@@ -82,9 +88,11 @@ public abstract class SkeletonMixin {
 
     @Inject(method = "registerGoals", at = @At("TAIL"))
     private void addAnimalTarget(CallbackInfo ci) {
-        if (!((Object) this instanceof Skeleton skeleton)) {
+        if ((Object) this instanceof WitherSkeleton) {
             return;
         }
+
+        AbstractSkeleton skeleton = (AbstractSkeleton) (Object) this;
 
         MobAccessor accessor = (MobAccessor) skeleton;
 
@@ -93,7 +101,8 @@ public abstract class SkeletonMixin {
                 new NearestAttackableTargetGoal<>(
                         skeleton,
                         Animal.class,
-                        true
+                        true,
+                        (target, level) -> !target.isVehicle()
                 )
         );
     }
@@ -103,9 +112,11 @@ public abstract class SkeletonMixin {
             at = @At("TAIL")
     )
     private void removeMeleeGoal(CallbackInfo ci) {
-        if (!((Object) this instanceof Skeleton skeleton)) {
+        if ((Object) this instanceof WitherSkeleton) {
             return;
         }
+
+        AbstractSkeleton skeleton = (AbstractSkeleton) (Object) this;
 
         MobAccessor accessor = (MobAccessor) skeleton;
 
@@ -122,7 +133,7 @@ public abstract class SkeletonMixin {
     private void modifyAttackInterval(
             CallbackInfoReturnable<Integer> cir
     ) {
-        if ((Object) this instanceof Skeleton) {
+        if (!((Object) this instanceof WitherSkeleton)) {
             cir.setReturnValue(ATTACK_INTERVAL_TICKS);
         }
     }
@@ -135,7 +146,7 @@ public abstract class SkeletonMixin {
     private void modifyHardAttackInterval(
             CallbackInfoReturnable<Integer> cir
     ) {
-        if ((Object) this instanceof Skeleton) {
+        if (!((Object) this instanceof WitherSkeleton)) {
             cir.setReturnValue(HARD_ATTACK_INTERVAL_TICKS);
         }
     }

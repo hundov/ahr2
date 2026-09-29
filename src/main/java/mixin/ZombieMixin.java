@@ -74,7 +74,8 @@ public class ZombieMixin {
                 new NearestAttackableTargetGoal<>(
                         zombie,
                         Animal.class,
-                        true
+                        true,
+                        (target, level) -> !target.isVehicle()
                 )
         );
     }

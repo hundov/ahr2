@@ -20,6 +20,8 @@
     "PhantomMixin",
     "ServerPlayerMixin",
     "SkeletonMixin",
+    "SpiderMixin",
+    "ToolMaterialMixin",
     "ZombieMixin",
     "animals.AbstractCowMixin",
     "animals.ChickenMixin",

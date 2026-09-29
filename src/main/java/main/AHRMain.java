@@ -17,6 +17,7 @@ public class AHRMain implements ModInitializer {
 
         AHRLoot.init();
         AHRItems.init();
+        AHRBlocks.init();
 
         AHRGameEvents.init();
         AHRServerEvents.init();

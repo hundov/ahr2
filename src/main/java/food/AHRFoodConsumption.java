@@ -21,36 +21,39 @@ import registry.*;
 
 public final class AHRFoodConsumption {
 
-    private static final float SATURATION_MULTIPLIER_PEACEFUL = 1.0F;
-    private static final float SATURATION_MULTIPLIER_EASY = 0.75F;
-    private static final float SATURATION_MULTIPLIER_NORMAL = 0.5F;
-    private static final float SATURATION_MULTIPLIER_HARD = 0.25F;
-
     private static final float NETHER_FOOD_DIVISOR = 2.0F;
     private static final float END_FOOD_DIVISOR = 4.0F;
 
     public static float getNutritionMultiplier(Level level) {
+        float multiplier = switch (level.getDifficulty()) {
+            case EASY -> 0.8F;
+            case NORMAL -> 0.7F;
+            case HARD -> 0.4F;
+            default -> 1.0F;
+        };
 
-        float multiplier = 1.0f;
-
-        if (level.dimension() == Level.NETHER) multiplier /= NETHER_FOOD_DIVISOR;
-        else if (level.dimension() == Level.END) multiplier /= END_FOOD_DIVISOR;
+        if (level.dimension() == Level.NETHER) {
+            multiplier /= NETHER_FOOD_DIVISOR;
+        } else if (level.dimension() == Level.END) {
+            multiplier /= END_FOOD_DIVISOR;
+        }
 
         return multiplier;
-
     }
 
     public static float getSaturationMultiplier(Level level) {
-
         float multiplier = switch (level.getDifficulty()) {
-            case EASY -> SATURATION_MULTIPLIER_EASY;
-            case NORMAL -> SATURATION_MULTIPLIER_NORMAL;
-            case HARD -> SATURATION_MULTIPLIER_HARD;
-            default -> SATURATION_MULTIPLIER_PEACEFUL;
+            case EASY -> 0.6F;
+            case NORMAL -> 0.4F;
+            case HARD -> 0.25F;
+            default -> 0.9F;
         };
 
-        if (level.dimension() == Level.NETHER) multiplier /= NETHER_FOOD_DIVISOR;
-        else if (level.dimension() == Level.END) multiplier /= END_FOOD_DIVISOR;
+        if (level.dimension() == Level.NETHER) {
+            multiplier /= NETHER_FOOD_DIVISOR;
+        } else if (level.dimension() == Level.END) {
+            multiplier /= END_FOOD_DIVISOR;
+        }
 
         return multiplier;
     }
@@ -138,7 +141,7 @@ public final class AHRFoodConsumption {
 
         int efficiency = history.getEfficiency(item);
 
-        int adjustedNutrition = (int) Math.floor(
+        int adjustedNutrition = Math.round(
                 nutrition
                         * getNutritionMultiplier(level)
                         * efficiency

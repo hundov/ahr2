@@ -59,9 +59,7 @@ public final class AHRFoodConsumption {
     }
 
     public static boolean canConsume(Player player, Item item) {
-        AHRFoodHistory history =
-                player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
-
+        AHRFoodHistory history = AHRFoodHistory.get(player);
         return history.getEfficiency(item) > 0;
     }
 
@@ -136,8 +134,7 @@ public final class AHRFoodConsumption {
             int nutrition,
             float saturation
     ) {
-        AHRFoodHistory history =
-                player.getAttachedOrCreate(AHRAttachments.FOOD_HISTORY);
+        AHRFoodHistory history = AHRFoodHistory.get(player);
 
         int efficiency = history.getEfficiency(item);
 

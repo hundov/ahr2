@@ -9,7 +9,7 @@ import util.Logger;
 public final class AHRInventoryExhaustion {
 
     private static final int INTERVAL_TICKS = 200;
-    private static final float EXHAUSTION_PER_SLOT = 0.005F;
+    private static final float EXHAUSTION_PER_SLOT = 0.05F;
 
     private static int tickCounter = 0;
 

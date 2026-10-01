@@ -24,12 +24,6 @@ public class ItemMixin {
         if (itemStack.has(AHRComponents.MADE_ON)) return;
         int currentDay = Math.toIntExact(level.getOverworldClockTime() / 24000L);
         itemStack.set(AHRComponents.MADE_ON, currentDay);
-        System.out.println(
-                "[AHR] MADE_ON (tick): "
-                        + itemStack.getItem()
-                        + " -> "
-                        + itemStack.get(AHRComponents.MADE_ON)
-        );
     }
 
 }

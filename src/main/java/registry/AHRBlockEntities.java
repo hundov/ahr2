@@ -1,6 +1,7 @@
 package registry;
 
 import block.AHRCropBlockEntity;
+import block.AHRFoodDetectorBlockEntity;
 import food.cake.CakeBlockEntity;
 import main.AHRMain;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -32,6 +33,16 @@ public class AHRBlockEntities {
                     Blocks.CAKE
             ).build()
     );
+
+    public static final BlockEntityType<AHRFoodDetectorBlockEntity> FOOD_DETECTOR =
+            Registry.register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    Identifier.fromNamespaceAndPath(AHRMain.MOD_ID, "food_detector"),
+                    FabricBlockEntityTypeBuilder.create(
+                            AHRFoodDetectorBlockEntity::new,
+                            AHRBlocks.FOOD_DETECTOR
+                    ).build()
+            );
 
 
     private AHRBlockEntities() {}

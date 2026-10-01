@@ -53,7 +53,6 @@ public final class AHRSpoilage {
         if (madeOn == null) return;
 
         int currentDay = Math.toIntExact(level.getOverworldClockTime() / 24000L);
-
         int age = currentDay - madeOn;
         int shelfLife = AHRShelfLife.get(item);
 
@@ -97,6 +96,19 @@ public final class AHRSpoilage {
         );
 
         player.hurtServer((ServerLevel) level, damageSource, damage);
+    }
+
+    public static boolean isSpoiled(Level level, ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        Integer madeOn = stack.get(AHRComponents.MADE_ON);
+        if (madeOn == null) return false;
+
+        int currentDay = Math.toIntExact(level.getOverworldClockTime() / 24000L);
+        int age = currentDay - madeOn;
+        int shelfLife = AHRShelfLife.get(stack.getItem());
+
+        return age >= shelfLife;
     }
 
     private AHRSpoilage() {

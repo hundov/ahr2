@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "XZX",
+    "RXR"
+  ],
+  "key": {
+    "X": "minecraft:iron_ingot",
+    "Y": "minecraft:cake",
+    "Z": "minecraft:redstone",
+    "R": "minecraft:repeater"
+  },
+  "result": {
+    "id": "ahr2:food_detector",
+    "count": 1
+  }
+}

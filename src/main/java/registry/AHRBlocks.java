@@ -1,5 +1,6 @@
 package registry;
 
+import block.AHRFoodDetectorBlock;
 import block.AHRWebBlock;
 import main.AHRMain;
 import net.minecraft.core.Registry;
@@ -17,6 +18,12 @@ public final class AHRBlocks {
             "spider_web",
             AHRWebBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB)
+    );
+
+    public static final Block FOOD_DETECTOR = register(
+            "food_detector",
+            AHRFoodDetectorBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
     );
 
     public static void init() {

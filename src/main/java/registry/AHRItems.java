@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -69,6 +70,13 @@ public class AHRItems {
             create("emerald_nugget"),
             Item::new,
             new Item.Properties()
+    );
+
+    public static final Item FOOD_DETECTOR = register(
+            create("food_detector"),
+            properties -> new BlockItem(AHRBlocks.FOOD_DETECTOR, properties),
+            new Item.Properties()
+                    .useBlockDescriptionPrefix()
     );
 
     private static ResourceKey<Item> create(String name) {

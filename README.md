@@ -123,11 +123,17 @@ Screenshots and short videos are especially useful for gameplay-related issues.
 
 ## License
 
-**A Hundov Ranch 2.0 is currently distributed under [All Rights Reserved](LICENSE).**
+The A Hundov Ranch 2.0 source code is licensed under the **MIT License**.
 
-The source code is publicly available for development and inspection, but this does **not** automatically grant permission to redistribute, modify, repackage, or use the project commercially.
+You are free to use, copy, modify, merge, publish, distribute, sublicense, and sell the source code and derivative works, subject to the terms of the license.
 
-See the [`LICENSE`](LICENSE) file for the complete terms.
+This includes creating forks, modified versions, private projects, commercial projects, and other derivative works.
+
+You may also freely create and monetize content featuring A Hundov Ranch 2.0, including videos, streams, screenshots, reviews, articles, modpacks, and similar content. **No permission is required.**
+
+When redistributing the source code or substantial portions of it, the original copyright notice and the MIT License must be retained.
+
+See the [`LICENSE`](LICENSE) file for the complete license text.
 
 ## Credits
 

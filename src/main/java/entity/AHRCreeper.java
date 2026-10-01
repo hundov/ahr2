@@ -102,14 +102,6 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
         this.vibrationTargetStuckTime = 0;
     }
 
-    private void emitTargetUnreachableEvent(BlockPos target) {
-        this.level().gameEvent(
-                this,
-                AHRGameEvents.TARGET_UNREACHABLE,
-                target
-        );
-    }
-
     private class VibrationUser implements VibrationSystem.User {
 
         private final PositionSource positionSource =
@@ -228,7 +220,6 @@ public class AHRCreeper extends Creeper implements VibrationSystem {
             if (this.creeper.vibrationTargetStuckTime
                     >= VIBRATION_TARGET_STUCK_TIMEOUT_TICKS) {
 
-                this.creeper.emitTargetUnreachableEvent(target);
                 this.creeper.clearVibrationTarget();
                 this.creeper.ignite();
                 return;

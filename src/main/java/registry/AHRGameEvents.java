@@ -12,9 +12,6 @@ public final class AHRGameEvents {
     public static final Holder.Reference<GameEvent> ZOMBIE_STUCK =
             register("zombie_stuck", 48);
 
-    public static final Holder.Reference<GameEvent> TARGET_UNREACHABLE =
-            register("target_unreachable", 196);
-
     public static void init() {
     }
 

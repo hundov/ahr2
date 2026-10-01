@@ -3,6 +3,9 @@ package registry;
 import block.AHRCropBlockEntity;
 import block.AHRFoodDetectorBlockEntity;
 import food.cake.CakeBlockEntity;
+import food.melon.MelonBlockEntity;
+import food.mushroom.MushroomBlockEntity;
+import food.pumpkin.PumpkinBlockEntity;
 import main.AHRMain;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -33,6 +36,40 @@ public class AHRBlockEntities {
                     Blocks.CAKE
             ).build()
     );
+
+    public static final BlockEntityType<MushroomBlockEntity> MUSHROOM =
+            Registry.register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    Identifier.fromNamespaceAndPath(AHRMain.MOD_ID, "mushroom"),
+                    FabricBlockEntityTypeBuilder.create(
+                            MushroomBlockEntity::new,
+                            Blocks.RED_MUSHROOM,
+                            Blocks.BROWN_MUSHROOM
+                    ).build()
+            );
+
+    public static final BlockEntityType<MelonBlockEntity> MELON =
+            Registry.register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    Identifier.fromNamespaceAndPath(AHRMain.MOD_ID, "melon"),
+                    FabricBlockEntityTypeBuilder.create(
+                            MelonBlockEntity::new,
+                            Blocks.MELON
+                    ).build()
+            );
+
+    public static final BlockEntityType<PumpkinBlockEntity> PUMPKIN =
+            Registry.register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    Identifier.fromNamespaceAndPath(
+                            AHRMain.MOD_ID,
+                            "pumpkin"
+                    ),
+                    FabricBlockEntityTypeBuilder.create(
+                            PumpkinBlockEntity::new,
+                            Blocks.PUMPKIN
+                    ).build()
+            );
 
     public static final BlockEntityType<AHRFoodDetectorBlockEntity> FOOD_DETECTOR =
             Registry.register(

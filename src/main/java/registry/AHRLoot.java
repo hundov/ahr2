@@ -5,7 +5,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import util.IPerishableBlockEntity;
 import util.Logger;
 
 public class AHRLoot {
@@ -23,15 +26,61 @@ public class AHRLoot {
 
             boolean chestLoot = isChestLoot(holder);
 
-            int currentDay = Math.toIntExact(level.getOverworldClockTime() / 24000L);
+            int currentDay = Math.toIntExact(
+                    level.getOverworldClockTime() / 24000L
+            );
+
+            BlockEntity blockEntity =
+                    context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+
+            Integer blockMadeOn = null;
+
+            if (blockEntity instanceof IPerishableBlockEntity perishable) {
+                int madeOn = perishable.getMadeOn();
+
+                if (madeOn != 0) {
+                    blockMadeOn = madeOn;
+
+                    LOG.send(
+                            "BLOCK MADE_ON: "
+                                    + blockEntity.getClass().getSimpleName()
+                                    + " -> "
+                                    + madeOn
+                    );
+                }
+            }
 
             for (ItemStack stack : drops) {
-                if (!stack.is(AHRFoodTags.PERISHABLE_ITEM)) continue;
-                if (stack.has(AHRComponents.MADE_ON)) continue;
+                if (!stack.is(AHRFoodTags.PERISHABLE_ITEM)) {
+                    continue;
+                }
+
+                if (stack.has(AHRComponents.MADE_ON)) {
+                    continue;
+                }
+
+                if (blockMadeOn != null) {
+                    stack.set(
+                            AHRComponents.MADE_ON,
+                            blockMadeOn
+                    );
+
+                    LOG.send(
+                            "MADE_ON: "
+                                    + stack.getItem()
+                                    + " <- block "
+                                    + blockMadeOn
+                    );
+
+                    continue;
+                }
 
                 if (chestLoot) {
                     int randomAge =
-                            level.getRandom().nextIntBetweenInclusive(0, MAX_CHEST_AGE);
+                            level.getRandom().nextIntBetweenInclusive(
+                                    0,
+                                    MAX_CHEST_AGE
+                            );
 
                     stack.set(
                             AHRComponents.MADE_ON,

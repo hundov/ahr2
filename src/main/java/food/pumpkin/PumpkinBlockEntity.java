@@ -1,4 +1,4 @@
-package food.cake;
+package food.pumpkin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -8,16 +8,20 @@ import net.minecraft.world.level.storage.ValueOutput;
 import registry.AHRBlockEntities;
 import util.IPerishableBlockEntity;
 
-public class CakeBlockEntity extends BlockEntity implements IPerishableBlockEntity {
+public class PumpkinBlockEntity extends BlockEntity implements IPerishableBlockEntity {
 
     private int madeOn;
 
-    public CakeBlockEntity(BlockPos pos, BlockState state) {
-        super(AHRBlockEntities.CAKE, pos, state);
+    public PumpkinBlockEntity(BlockPos pos, BlockState state) {
+        super(AHRBlockEntities.PUMPKIN, pos, state);
     }
 
-    public int getMadeOn() {return madeOn;}
+    @Override
+    public int getMadeOn() {
+        return madeOn;
+    }
 
+    @Override
     public void setMadeOn(int madeOn) {
         this.madeOn = madeOn;
         setChanged();

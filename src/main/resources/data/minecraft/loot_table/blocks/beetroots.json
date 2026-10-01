@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:alternatives",
+  "children": [
+    {
+      "type": "minecraft:item",
+      "conditions": [
+        {
+          "block": "minecraft:beetroots",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ],
+      "name": "minecraft:beetroot"
+    },
+    {
+      "type": "minecraft:item",
+      "name": "minecraft:beetroot_seeds"
+    }
+  ]
+}

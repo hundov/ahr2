@@ -88,10 +88,6 @@ public class AHRShelfLife {
             Map.entry(Items.DRIED_KELP, 30),
             Map.entry(Items.DRIED_KELP_BLOCK, 30),
 
-            // Ingredients
-            Map.entry(Items.SUGAR, 60),
-            Map.entry(Items.COCOA_BEANS, 30),
-
             // Honey
             Map.entry(Items.HONEY_BOTTLE, 300),
             Map.entry(Items.HONEY_BLOCK, 300),

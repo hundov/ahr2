@@ -1,12 +1,13 @@
 package mixin;
 
 import block.AHRCropBlock;
+import food.melon.AHRMelonBlock;
+import net.minecraft.references.BlockIds;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
@@ -66,6 +67,25 @@ public class BlocksMixin {
                                     3,
                                     AHRCropBlock.ShapeType.BEETROOT
                             )
+            );
+        }
+    }
+
+    @ModifyArgs(
+            method = "register(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/block/Blocks;register(Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;"
+            )
+    )
+    private static void replaceMelonFactory(Args args) {
+        ResourceKey<Block> id = args.get(0);
+
+        if (id == BlockIds.MELON) {
+            args.set(
+                    1,
+                    (Function<BlockBehaviour.Properties, Block>)
+                            AHRMelonBlock::new
             );
         }
     }

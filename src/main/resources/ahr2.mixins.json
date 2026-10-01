@@ -30,6 +30,8 @@
     "animals.PigMixin",
     "animals.SheepMixin",
     "blocks.CakeBlockMixin",
+    "blocks.MushroomBlockMixin",
+    "blocks.PumpkinBlockMixin",
     "effects.PoisonMobEffectMixin",
     "recipe.RecipeAssemblyMixin",
     "recipe.SingleItemRecipeMixin"

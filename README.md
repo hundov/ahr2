@@ -68,13 +68,19 @@ Expect unfinished features, balance changes, temporary implementations, and thin
 
 The project uses separate client and server/common source sets and is intended to work on both sides of a multiplayer environment.
 
-## Installation
+## Development Release
 
-*A public release is not available yet.*
+The latest development build is:
 
-Once a release is published, installation instructions and supported versions will be added here.
+**`dev-0.4` — Minecraft 26.1**
 
-For development builds, clone the repository and import the project into an IDE with Gradle support.
+[Download `dev-0.4`](../../releases/tag/dev-0.4)
+
+> This is a development build, not a stable release. Expect unfinished features, balance changes, and breaking changes.
+
+### Previous Builds
+
+Older development builds are available on the [Releases](../../releases) page.
 
 ## For Contributors
 

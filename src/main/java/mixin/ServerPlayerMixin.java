@@ -1,8 +1,14 @@
 package mixin;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Unit;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.portal.TeleportTransition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import player.AHRPlayerDimensionAccess;
 import player.AHRPlayerExhaustion;
 import player.AHRPlayerExperience;
@@ -71,14 +76,25 @@ public abstract class ServerPlayerMixin {
     // Sleep System
     // ---------------------------------------------
 
-    @Inject(method = "startSleeping", at = @At("HEAD"), cancellable = true)
-    private void handleStartSleeping(BlockPos pos, CallbackInfo ci) {
+    @Inject(
+            method = "startSleepInBed",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/player/Player;startSleepInBed(Lnet/minecraft/core/BlockPos;)Lcom/mojang/datafixers/util/Either;"
+            ),
+            cancellable = true
+    )
+    private void checkAhrSleep(BlockPos pos, CallbackInfoReturnable<Either<Player.BedSleepingProblem, Unit>> cir) {
         ServerPlayer player = (ServerPlayer) (Object) this;
 
         if (!AHRPlayerSleep.tryStartSleeping(player)) {
-            ci.cancel();
-            return;
+            cir.setReturnValue(Either.left(Player.BedSleepingProblem.OTHER_PROBLEM));
         }
+    }
+
+    @Inject(method = "startSleeping", at = @At("HEAD"))
+    private void trackStartSleeping(BlockPos pos, CallbackInfo ci) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
 
         sleepStartTime = player.level().getGameTime();
         wasSleeping = true;

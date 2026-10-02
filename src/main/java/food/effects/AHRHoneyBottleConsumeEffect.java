@@ -1,4 +1,4 @@
-package food;
+package food.effects;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -11,22 +11,22 @@ import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import registry.AHRConsumeEffects;
 
-public record AHRMilkConsumeEffect() implements ConsumeEffect {
+public record AHRHoneyBottleConsumeEffect() implements ConsumeEffect {
 
-    private static final float NAUSEA_DURATION_MULTIPLIER = 0.90F;
+    private static final float POISON_DURATION_MULTIPLIER = 0.35F;
 
-    public static final AHRMilkConsumeEffect INSTANCE =
-            new AHRMilkConsumeEffect();
+    public static final AHRHoneyBottleConsumeEffect INSTANCE =
+            new AHRHoneyBottleConsumeEffect();
 
-    public static final MapCodec<AHRMilkConsumeEffect> CODEC =
+    public static final MapCodec<AHRHoneyBottleConsumeEffect> CODEC =
             MapCodec.unit(INSTANCE);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AHRMilkConsumeEffect> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, AHRHoneyBottleConsumeEffect> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);
 
     @Override
-    public Type<AHRMilkConsumeEffect> getType() {
-        return AHRConsumeEffects.MILK;
+    public Type<AHRHoneyBottleConsumeEffect> getType() {
+        return AHRConsumeEffects.HONEY_BOTTLE;
     }
 
     @Override
@@ -35,14 +35,14 @@ public record AHRMilkConsumeEffect() implements ConsumeEffect {
             ItemStack stack,
             LivingEntity user
     ) {
-        MobEffectInstance nausea = user.getEffect(MobEffects.NAUSEA);
+        MobEffectInstance nausea = user.getEffect(MobEffects.POISON);
 
         if (nausea == null) {
             return false;
         }
 
         MobEffectInstance reducedNausea =
-                nausea.withScaledDuration(NAUSEA_DURATION_MULTIPLIER);
+                nausea.withScaledDuration(POISON_DURATION_MULTIPLIER);
 
         user.forceAddEffect(reducedNausea, null);
 

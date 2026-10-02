@@ -1,6 +1,7 @@
 package registry;
 
-import food.AHRMilkConsumeEffect;
+import food.effects.AHRHoneyBottleConsumeEffect;
+import food.effects.AHRMilkConsumeEffect;
 import main.AHRMain;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,6 +20,19 @@ public final class AHRConsumeEffects {
                     new ConsumeEffect.Type<>(
                             AHRMilkConsumeEffect.CODEC,
                             AHRMilkConsumeEffect.STREAM_CODEC
+                    )
+            );
+
+    public static final ConsumeEffect.Type<AHRHoneyBottleConsumeEffect> HONEY_BOTTLE =
+            Registry.register(
+                    BuiltInRegistries.CONSUME_EFFECT_TYPE,
+                    Identifier.fromNamespaceAndPath(
+                            AHRMain.MOD_ID,
+                            "honey_bottle"
+                    ),
+                    new ConsumeEffect.Type<>(
+                            AHRHoneyBottleConsumeEffect.CODEC,
+                            AHRHoneyBottleConsumeEffect.STREAM_CODEC
                     )
             );
 

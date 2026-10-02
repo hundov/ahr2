@@ -17,11 +17,11 @@ import java.util.List;
 
 public record AHRFoodHistory(List<FoodEntry> foods) {
 
-    public static final int EASY_SIZE = 24;
-    public static final int NORMAL_SIZE = 36;
-    public static final int HARD_SIZE = 48;
+    public static final int EASY_SIZE = 18;
+    public static final int NORMAL_SIZE = 30;
+    public static final int HARD_SIZE = 40;
 
-    public static final int FOOD_MEMORY_DAYS = 7;
+    public static final int FOOD_MEMORY_DAYS = 4;
 
     public static final Codec<FoodEntry> FOOD_ENTRY_CODEC =
             RecordCodecBuilder.create(instance -> instance.group(

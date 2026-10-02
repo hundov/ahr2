@@ -1,6 +1,7 @@
 package mixin;
 
-import food.AHRMilkConsumeEffect;
+import food.effects.AHRHoneyBottleConsumeEffect;
+import food.effects.AHRMilkConsumeEffect;
 import item.AHRBowlItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
@@ -55,6 +56,18 @@ public class ItemsMixin {
                             DataComponents.CONSUMABLE,
                             Consumables.defaultDrink()
                                     .onConsume(AHRMilkConsumeEffect.INSTANCE)
+                                    .build()
+                    )
+            );
+        }
+
+        if ("honey_bottle".equals(key.identifier().getPath())) {
+            args.set(
+                    2,
+                    ((Item.Properties) args.get(2)).component(
+                            DataComponents.CONSUMABLE,
+                            Consumables.defaultDrink()
+                                    .onConsume(AHRHoneyBottleConsumeEffect.INSTANCE)
                                     .build()
                     )
             );

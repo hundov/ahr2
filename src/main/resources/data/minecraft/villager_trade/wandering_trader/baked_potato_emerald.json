@@ -1,11 +1,11 @@
 {
   "gives": {
-    "id": "minecraft:emerald"
+    "id": "ahr2:emerald_nugget"
   },
   "max_uses": 2.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 4.0,
+    "count": 3.0,
     "id": "minecraft:baked_potato"
   }
 }

@@ -1,9 +1,9 @@
 {
   "gives": {
-    "count": 2,
-    "id": "minecraft:emerald"
+    "count": 1,
+    "id": "ahr2:emerald_nugget"
   },
-  "max_uses": 2.0,
+  "max_uses": 1.0,
   "reputation_discount": 0.05,
   "wants": {
     "id": "minecraft:milk_bucket"

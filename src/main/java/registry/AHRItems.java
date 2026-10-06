@@ -1,8 +1,10 @@
 package registry;
 
 import item.AHRBowlWithWaterItem;
+import item.AHRNetherKnowledgeItem;
 import main.AHRMain;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -10,6 +12,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 
 import java.util.function.Function;
 
@@ -77,6 +80,16 @@ public class AHRItems {
             properties -> new BlockItem(AHRBlocks.FOOD_DETECTOR, properties),
             new Item.Properties()
                     .useBlockDescriptionPrefix()
+    );
+
+    public static final Item NETHER_KNOWLEDGE = register(
+            create("nether_knowledge"),
+            AHRNetherKnowledgeItem::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+
     );
 
     private static ResourceKey<Item> create(String name) {

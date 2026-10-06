@@ -92,6 +92,15 @@ public class AHRItems {
 
     );
 
+    public static final Item TRAVELER_SCRAPS = register(
+            create("traveler_scraps"),
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+    );
+
     private static ResourceKey<Item> create(String name) {
         return ResourceKey.create(
                 BuiltInRegistries.ITEM.key(),

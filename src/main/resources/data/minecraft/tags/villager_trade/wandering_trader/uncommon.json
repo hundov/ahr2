@@ -1,5 +1,7 @@
 {
+  "replace": true,
   "values": [
+    "minecraft:wandering_trader/emerald_traveler_scraps",
     "minecraft:wandering_trader/emerald_packed_ice",
     "minecraft:wandering_trader/emerald_blue_ice",
     "minecraft:wandering_trader/emerald_gunpowder",

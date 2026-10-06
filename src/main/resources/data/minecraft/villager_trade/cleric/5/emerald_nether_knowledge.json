@@ -1,12 +1,16 @@
 {
+  "additional_wants": {
+    "count": 12.0,
+    "id": "minecraft:emerald_block"
+  },
   "gives": {
     "id": "ahr2:nether_knowledge"
   },
   "max_uses": 1.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 12.0,
-    "id": "minecraft:emerald_block"
+    "count": 1.0,
+    "id": "ahr2:traveler_scraps"
   },
   "xp": 2.0
 }

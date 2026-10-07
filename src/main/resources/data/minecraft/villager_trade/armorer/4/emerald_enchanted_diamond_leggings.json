@@ -28,10 +28,10 @@
   "gives": {
     "id": "minecraft:diamond_leggings"
   },
-  "max_uses": 3.0,
+  "max_uses": 1.0,
   "reputation_discount": 0.2,
   "wants": {
-    "count": 14.0,
+    "count": 16.0,
     "id": "minecraft:emerald"
   },
   "xp": 15.0

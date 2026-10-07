@@ -1,5 +1,8 @@
 {
+  "replace": true,
   "values": [
-    "minecraft:butcher/5/sweet_berries_emerald"
+    "minecraft:butcher/5/sweet_berries_emerald",
+    "minecraft:butcher/5/emerald_boiled_egg",
+    "minecraft:butcher/5/emerald_fried_egg"
   ]
 }

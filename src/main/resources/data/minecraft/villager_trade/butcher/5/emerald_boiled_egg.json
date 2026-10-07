@@ -1,11 +1,13 @@
 {
   "gives": {
-    "id": "minecraft:rabbit_stew"
+    "count": 1.0,
+    "id": "ahr2:bowl_with_boiled_egg"
   },
   "max_uses": 2.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 2.0,
+    "count": 5.0,
     "id": "minecraft:emerald"
-  }
+  },
+  "xp": 5.0
 }

@@ -72,9 +72,9 @@ The project uses separate client and server/common source sets and is intended t
 
 The latest development build is:
 
-**`dev-0.4` — Minecraft 26.1**
+**`dev-0.5` — Minecraft 26.1**
 
-[Download `dev-0.4`](../../releases/tag/dev-0.4)
+[Download `dev-0.4`](../../releases/tag/dev-0.5)
 
 > This is a development build, not a stable release. Expect unfinished features, balance changes, and breaking changes.
 

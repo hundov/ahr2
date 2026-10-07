@@ -1,6 +1,6 @@
 {
   "gives": {
-    "count": 2.0,
+    "count": 3.0,
     "id": "ahr2:emerald_nugget"
   },
   "max_uses": 2.0,
@@ -9,5 +9,5 @@
     "count": 16.0,
     "id": "minecraft:pumpkin"
   },
-  "xp": 1.0
+  "xp": 2.0
 }

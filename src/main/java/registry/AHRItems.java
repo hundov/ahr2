@@ -97,6 +97,15 @@ public class AHRItems {
             Item::new,
             new Item.Properties()
                     .stacksTo(1)
+                    .rarity(Rarity.RARE)
+                    .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+    );
+
+    public static final Item SCRAPS_OF_END = register(
+            create("scraps_of_end"),
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(1)
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
     );

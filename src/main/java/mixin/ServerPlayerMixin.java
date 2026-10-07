@@ -2,14 +2,20 @@ package mixin;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Unit;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
@@ -23,6 +29,9 @@ import player.AHRPlayerSleep;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
+
+    @Unique
+    private int ahr$fireStunTicks;
 
     // ------------------------------------------- experience block
 
@@ -57,6 +66,57 @@ public abstract class ServerPlayerMixin {
         player.sendOverlayMessage(Component.translatable("ahr2.teleport"));
 
         cir.setReturnValue(null);
+    }
+
+    @Inject(
+            method = "tick",
+            at = @At("HEAD")
+    )
+    private void ahr$tickFireStun(CallbackInfo ci) {
+        if (ahr$fireStunTicks > 0) {
+            ahr$fireStunTicks--;
+        }
+    }
+
+    @Inject(method = "hurtServer", at = @At("RETURN"))
+    private void ahr$handleNetherFireDamage(
+            ServerLevel level,
+            DamageSource source,
+            float damage,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (!cir.getReturnValue()) return;
+        if (level.dimension() != Level.NETHER) return;
+        if (!source.is(DamageTypes.ON_FIRE) && !source.is(DamageTypes.IN_FIRE)) return;
+
+        ServerPlayer player = (ServerPlayer) (Object) this;
+
+        ahr$fireStunTicks = 5;
+
+        player.addEffect(new MobEffectInstance(
+                MobEffects.SLOWNESS,
+                5,
+                255,
+                false,
+                false,
+                false
+        ));
+
+        if (player.isUsingItem()) {
+            ItemStack item = player.getUseItem();
+
+            player.stopUsingItem();
+            player.getCooldowns().addCooldown(item.getItem().getDefaultInstance(), 10);
+        }
+    }
+
+    @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
+    private void ahr$cancelNetherFireJump(CallbackInfo ci) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+
+        if (player.level().dimension() == Level.NETHER && player.hasEffect(MobEffects.SLOWNESS)) {
+            ci.cancel();
+        }
     }
 
     // ---------------------------------------------

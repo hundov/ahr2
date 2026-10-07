@@ -31,7 +31,7 @@
   "max_uses": 1.0,
   "reputation_discount": 0.05,
   "wants": {
-    "count": 16.0,
+    "count": 8.0,
     "id": "minecraft:emerald_block"
   },
   "xp": 1.0

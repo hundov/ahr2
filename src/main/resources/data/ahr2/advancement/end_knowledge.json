@@ -1,23 +1,40 @@
 {
-  "parent": "minecraft:adventure/root",
-  "criteria": {
-    "unlock": {
-      "trigger": "minecraft:impossible"
-    }
-  },
+  "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "id": "minecraft:book"
+      "id": "ahr2:scraps_of_end"
     },
     "title": {
-      "translate": "advancements.ahr2.end_knowledge.title"
+      "translate": "advancements.ahr2.end_scraps.title"
     },
     "description": {
-      "translate": "advancements.ahr2.end_knowledge.description"
+      "translate": "advancements.ahr2.end_scraps.description"
     },
-    "frame": "challenge",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
+  },
+  "criteria": {
+    "has_scraps_of_end": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ahr2:scraps_of_end"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_scraps_of_end"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ahr2:end_knowledge"
+    ]
   }
 }

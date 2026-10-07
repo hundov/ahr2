@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XZX",
+    "VYM",
+    "XZX"
+  ],
+  "key": {
+    "X": "minecraft:echo_shard",
+    "V": "minecraft:nether_star",
+    "Y": "ahr2:scraps_of_end",
+    "M": "minecraft:netherite_block",
+    "Z": "minecraft:trial_key"
+  },
+  "result": {
+    "id": "ahr2:end_knowledge",
+    "count": 1
+  }
+}

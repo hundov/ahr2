@@ -1,6 +1,7 @@
 package registry;
 
 import item.AHRBowlWithWaterItem;
+import item.AHREndKnowledgeItem;
 import item.AHRNetherKnowledgeItem;
 import main.AHRMain;
 import net.minecraft.core.Registry;
@@ -108,6 +109,16 @@ public class AHRItems {
                     .stacksTo(1)
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+    );
+
+    public static final Item END_KNOWLEDGE = register(
+            create("end_knowledge"),
+            AHREndKnowledgeItem::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+
     );
 
     private static ResourceKey<Item> create(String name) {

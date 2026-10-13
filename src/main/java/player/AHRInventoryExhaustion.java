@@ -9,13 +9,13 @@ import util.Logger;
 public final class AHRInventoryExhaustion {
 
     private static final int INTERVAL_TICKS = 200;
-    private static final float EXHAUSTION_PER_SLOT = 0.05F;
+    private static final float EXHAUSTION_PER_SLOT = 0.15F;
 
     private static int tickCounter = 0;
 
     private static final Logger LOG = new Logger();
     static {
-        LOG.enabled = false;
+        LOG.enabled = true;
     }
 
     public static void tick(MinecraftServer server) {

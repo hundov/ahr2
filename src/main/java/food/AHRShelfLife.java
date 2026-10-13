@@ -28,10 +28,10 @@ public class AHRShelfLife {
             Map.entry(Items.BEETROOT, 7),
 
             Map.entry(Items.MELON, 7),
-            Map.entry(Items.MELON_SLICE, 5),
+            Map.entry(Items.MELON_SLICE, 7),
 
             Map.entry(Items.PUMPKIN, 14),
-            Map.entry(Items.CARVED_PUMPKIN, 7),
+            Map.entry(Items.CARVED_PUMPKIN, 14),
 
             Map.entry(Items.SWEET_BERRIES, 3),
             Map.entry(Items.GLOW_BERRIES, 3),
@@ -71,14 +71,14 @@ public class AHRShelfLife {
             // Bakery
             Map.entry(Items.BREAD, 31),
             Map.entry(Items.COOKIE, 14),
-            Map.entry(Items.CAKE, 3),
-            Map.entry(Items.PUMPKIN_PIE, 7),
+            Map.entry(Items.CAKE, 5),
+            Map.entry(Items.PUMPKIN_PIE, 14),
 
             // Soups / stews
-            Map.entry(Items.BEETROOT_SOUP, 2),
-            Map.entry(Items.MUSHROOM_STEW, 2),
-            Map.entry(Items.RABBIT_STEW, 2),
-            Map.entry(Items.SUSPICIOUS_STEW, 1),
+            Map.entry(Items.BEETROOT_SOUP, 3),
+            Map.entry(Items.MUSHROOM_STEW, 3),
+            Map.entry(Items.RABBIT_STEW, 3),
+            Map.entry(Items.SUSPICIOUS_STEW, 3),
 
             // Mushrooms / plants
             Map.entry(Items.BROWN_MUSHROOM, 3),
@@ -87,6 +87,8 @@ public class AHRShelfLife {
             Map.entry(Items.KELP, 3),
             Map.entry(Items.DRIED_KELP, 30),
             Map.entry(Items.DRIED_KELP_BLOCK, 30),
+
+            Map.entry(Items.COCOA_BEANS, 28),
 
             // Honey
             Map.entry(Items.HONEY_BOTTLE, 300),
